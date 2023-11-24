@@ -221,12 +221,8 @@ int main()
 
 
     }
-    cout << game_board.getPlayerOnePosition();
-    cout << game_board.getPlayerTwoPosition();
+    cout << game_board.getPlayerOnePosition()<<endl;
+    cout << game_board.getPlayerTwoPosition()<<endl;
     
-    
-    
-
-
     return 0;
 }

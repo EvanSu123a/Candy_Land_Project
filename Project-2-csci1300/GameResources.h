@@ -22,13 +22,22 @@ class GameResources
 {
     private:
         int _characters_count;
+
         vector <Character> _character_list;
         vector <Candy> _all_candy_data;
+
+        Player _player_1;
+        Player _player_2;
 
     public:
         GameResources();
         void loadCharacters(); 
         void printCharacterList();
+
+        void load_player_one(Character, string);
+        void load_player_two(Character, string);
+
+
 };
 
 #endif

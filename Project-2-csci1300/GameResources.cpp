@@ -28,6 +28,8 @@ int split(string input_string, char seperator, string arr[], int arr_size)
 GameResources :: GameResources()
 {
     _characters_count = 0;
+    _player_1 = Player();
+    _player_2 = Player();
 }
 
 //loading characters from file
@@ -92,4 +94,23 @@ void GameResources :: printCharacterList()
         }
 
     }
+}
+
+//load the stats of the character the player choose into player themselves
+void GameResources :: load_player_one(Character character_choosen, string player_name)
+{
+    //load stats
+    _player_1.setPlayerCharacterName(character_choosen.name);
+    _player_1.setPlayerStamina(character_choosen.stamina);
+    _player_1.setPlayerGold(character_choosen.gold);
+    //load starting candies
+}
+
+void GameResources :: load_player_two(Character character_choosen, string player_name)
+{
+    //load stats
+    _player_2.setPlayerCharacterName(character_choosen.name);
+    _player_2.setPlayerStamina(character_choosen.stamina);
+    _player_2.setPlayerGold(character_choosen.gold);
+    //load starting candies
 }

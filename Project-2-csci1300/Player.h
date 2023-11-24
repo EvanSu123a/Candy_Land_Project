@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <vector>
-#include "Player.h"
 #include "structs.h"
 using namespace std;
 
@@ -17,8 +16,14 @@ class Player
         string _character_name;
         int _stamina;
         int _gold;
+        int _max_stamina;
+        int _max_gold;
+        int _max_candy_count_to_be_owned;
         vector <Candy> _inventory;
         int _current_candy_amount;
+
+        bool _can_player_move;
+        int _turns_player_cannot_move_for;
         /*
         bool canplayermove
         int how many turn cannot move
@@ -32,6 +37,34 @@ class Player
     public:
         
         Player();
+        
+        //setters
+        void setPlayerName(string);
+        void setPlayerCharacterName(string);
+        void setPlayerStamina(int);
+        void setPlayerGold(int);
+        void setCanPlayerMove(bool);
+        void setTurnsPlayerCannotMoveFor(int);
+        //getters
+        string getPlayerName();
+        string getPlayerCharacterName();
+        int getPlayerStamina();
+        int getPlayerGold();
+        int getCurrentCandyAmount();
+        bool getCanPlayerMove();
+        int getTurnsPlayerCannotMoveFor();
+
+        
+        void addCandyToInventory(Candy);
+        
+        //you can remove candy by position or by name
+        void removeCandyFromInventory(int);
+
+        Candy getCandyFromInventory(int);
+
+        void printInventory();
+
+        
         /*
         use candy
         check which type of candy the user is using
