@@ -16,6 +16,8 @@ Player :: Player()
     _current_candy_amount = 0;
     _can_player_move = true;
     _turns_player_cannot_move_for = 0;
+    _robbers_repel = false;
+    
 }
 
 void Player :: setPlayerName(string player_name)
@@ -42,7 +44,10 @@ void Player :: setTurnsPlayerCannotMoveFor(int turns_player_cannot_move)
 {
     _turns_player_cannot_move_for = turns_player_cannot_move;
 }
-
+void Player :: setRobbersRepel(bool status)
+{
+    _robbers_repel = status;
+}
 
 string Player :: getPlayerName()
 {
@@ -68,6 +73,11 @@ int Player :: getTurnsPlayerCannotMoveFor()
 {
     return _turns_player_cannot_move_for;
 }
+bool Player :: getRobbersRepel()
+{
+    return _robbers_repel;
+}
+
 
 void Player :: addCandyToInventory(Candy candy_to_be_addded)
 {
@@ -92,7 +102,7 @@ minues 1 from
 */
 void Player:: removeCandyFromInventory(int position)
 {
-    Candy not_a_candy {"", "", 0, ""};
+    Candy not_a_candy {"", "", "", 0, "", 0};
     for(int i = position; i < 8; i++)
     {
         _inventory[i] = _inventory[i+1];

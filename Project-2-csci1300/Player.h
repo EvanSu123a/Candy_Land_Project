@@ -24,6 +24,8 @@ class Player
 
         bool _can_player_move;
         int _turns_player_cannot_move_for;
+        bool _robbers_repel;
+
         /*
         bool canplayermove
         int how many turn cannot move
@@ -45,6 +47,7 @@ class Player
         void setPlayerGold(int);
         void setCanPlayerMove(bool);
         void setTurnsPlayerCannotMoveFor(int);
+        void setRobbersRepel(bool);
         //getters
         string getPlayerName();
         string getPlayerCharacterName();
@@ -53,6 +56,7 @@ class Player
         int getCurrentCandyAmount();
         bool getCanPlayerMove();
         int getTurnsPlayerCannotMoveFor();
+        bool getRobbersRepel();
 
         
         void addCandyToInventory(Candy);
@@ -63,16 +67,6 @@ class Player
         Candy getCandyFromInventory(int);
 
         void printInventory();
-
-        
-        /*
-        use candy
-        check which type of candy the user is using
-        if the player uses a magical candy modify the own user's 
-        */
-
-
-
 };
 
 #endif

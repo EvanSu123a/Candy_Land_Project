@@ -14,10 +14,10 @@ void Board::resetBoard()
     for (int i = 0; i < _BOARD_SIZE - 1; i++)
     {
         current_color = COLORS[i % COLOR_COUNT];
-        new_tile = {current_color, "regular tile"};
+        new_tile = {current_color, "regular tile", false, false, false, 0};
         _tiles[i] = new_tile;
     }
-    new_tile = {ORANGE, "regular tile"};
+    new_tile = {ORANGE, "regular tile", false, false, false, 0};
     _tiles[_BOARD_SIZE - 1] = new_tile;
 
     _candy_store_count = 0;
@@ -27,7 +27,7 @@ void Board::resetBoard()
     }
 
     _player1_position = 0;
-    _player2_position = 18;
+    _player2_position = 1;
 }
 //display 1 tile
 void Board::displayTile(int position)
@@ -131,6 +131,14 @@ int Board::getCandyStoreCount() const
 string Board :: getTileColor(int position)
 {
     return _tiles[position].color;
+}
+string Board :: getTileEffect(int position)
+{
+    return _tiles[position].tile_type;
+}
+Tile Board :: getTile(int position)
+{
+    return _tiles[position];
 }
 
 //getters for player positions

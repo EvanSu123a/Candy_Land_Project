@@ -8,7 +8,9 @@ struct Candy
 {
     string name;
     string description;
-    double price;
+    string effect_type;
+    int effect_value;
     string candy_type;
+    double price;
 };
 #endif

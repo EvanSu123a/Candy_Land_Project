@@ -24,6 +24,12 @@ struct Tile
 {
     string color;
     string tile_type;
+
+    bool is_special_tile;
+    bool is_treasure;
+    bool is_gummy_tile;
+    int gummy_tile_value;
+
     /*potential tile effects
     a bool variable check is it a special tile or normal tile
     special tile
@@ -39,6 +45,9 @@ struct Tile
             70% jellybean of vigor
             30% treasure hunters truffle
     candystore 3 of them
+
+    other special tiles
+    gummy tile when user use a candy on them
     */
 };
 
@@ -87,13 +96,17 @@ public:
     and add all of these 3 positions to the candy store 
 
     */
+    void generateCandyStore();
 
 /*
-generate candystore
+load candystore
 there are 11 candies in the game
 randomly generate 3 number from 0-10 and check if they are duplicates
 return a candystore struct with those 3 candies being filled
 */
+
+    void loadCandyStore();
+
 
 /*
 display candystore
@@ -104,10 +117,16 @@ ask user to buy candy
 check if the candy is in the candy store
 return the candy the user bought
 */
-/*
-check if tile is a special tile 
 
+    void displayCandyStore();
+    Candy buyFromCandyStore();
+
+/*
+check if tile is a special tile
+    returns true if it is a special tile
+    returns false if it is a normal tile
 */
+
 
 /*
 generate treasure tiles
@@ -141,6 +160,8 @@ while(trasures < 6)
 }
 */
 
+    void generateTreasureTiles();
+
 /*
 generate special tiles
 21 special tiles in the game
@@ -163,12 +184,44 @@ while(special tile count < 21)
             90-99 = gingerbread house tile
 
         }
-    }
-    
+    }    
   }
-  
+*/
+    void generateSpecialTile();
 
-  */
+/*
+check special tile
+when a player land on a tile check for special tile and do its actions
+takes in a int the amount player just moved
+if it is a special tile
+    if it is a shortcut tile
+        move the player 4 moves forward
+    else if it is a icecreamshop tile
+        draw another card and make player move forward a certain amount of tile
+    else if it is a gumdrop forest tile
+        move to user back 4 tiles
+        randomly generate a number between 5-10
+        and lose that much gold from user
+    else if it is a gingerbread house tile
+        move back the amount the user just moved
+        and check if user have immunity candy
+        if user have immunity candy
+            the user loses that candy
+*/
+
+/*
+check for same tile constraints function takes in a int indicating player 1 or player 2
+the other player moves back 1 tile
+prints out  messages to inform the other player they moved back 1 tile
+
+if the other player does not have robbers repel
+    generate random number between 5-30 and the other player lose that much gold
+    inform the other player they lose that much gold
+else
+    prints message inform the other player lost robber's repel but did not get gold stolen
+*/
+    void check_for_same_tile_constraints(int);
+
 
 
 
@@ -178,8 +231,11 @@ while(special tile count < 21)
     int getBoardSize() const;
     int getCandyStoreCount() const;
     string getTileColor(int);
+    string getTileEffect(int);
+    Tile getTile(int);
     int getPlayerOnePosition() const;
     int getPlayerTwoPosition() const;
+    
 
     bool addCandyStore(int);
     bool isPositionCandyStore(int); 

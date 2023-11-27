@@ -53,6 +53,8 @@ if current magenta into blue = 2
 return move needed
 */
 
+
+
 int drawCardsAndMove(string color_player_is_currently_on)
 {
     int step_to_move_forward = 0;
@@ -176,30 +178,26 @@ int main()
 
     //starting game initialize all game resources
     GameResources all_game_resources = GameResources();
+    all_game_resources.loadCharacters();
+    all_game_resources.loadInCandies();
     Board game_board = Board();
 
-    // int num_participants = 0;
-    // cout << "Welcome to the game of candyland. Please enter the number of participants" <<endl;
-    // cin >> num_participants;
+    //int num_participants = 2;
+    //loading players
+    string player1_name;
+    string player1_character_selection;
+    string player2_name;
+    string player2_character_selection;
+    cout << "Welcome to the game of candyland. Player 1 please enter your name" <<endl;
+    cin >> player1_name;
+    cout << "Awesome! Here are a list of characters a player can select from:" << endl;
+    all_game_resources.printCharacterList();
+    cin >> player1_character_selection;
+    all_game_resources.load_player_one(player1_character_selection, player1_name);
+
     
-    //load characters
 
-    //// cout << "Awesome! Here are a list of characters a player can select from:" << endl;
-    //// all_game_resources.loadCharacters();
-    //// all_game_resources.printCharacterList();
-    //// game_board.displayBoard();
-
-    //gameplay
-    /*
-    *bool player1 win player 2 win
-    *while nobody wins
-    *player 1 draw card move
-    *check if player 1 win
-    *if player 1 win end game
-    *player 2 draw card move
-    check if player 2 win
-    *if player 2 win end game
-    */
+    
 
     while(!player_one_win && !player_two_win)
     {
@@ -215,6 +213,7 @@ int main()
         int player2_current_position = game_board.getPlayerTwoPosition();
         string player2_current_tile_color = game_board.getTileColor(player2_current_position);
         int player_2_moves = drawCardsAndMove(player2_current_tile_color);
+
         player_two_win = !(game_board.movePlayerTwo(player_2_moves));
 
         game_board.displayBoard();
@@ -223,6 +222,8 @@ int main()
     }
     cout << game_board.getPlayerOnePosition()<<endl;
     cout << game_board.getPlayerTwoPosition()<<endl;
+
+    all_game_resources.print_player1_stats();
     
     return 0;
 }
