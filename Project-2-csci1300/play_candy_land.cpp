@@ -16,11 +16,6 @@
 using namespace std;
 
 
-//function used to generate a random number
-int generateRandom(int min, int max)
-{
-    return (rand() % (max - min + 1) + min);
-}
 
 /*
 draw cards
@@ -55,96 +50,7 @@ return move needed
 
 
 
-int drawCardsAndMove(string color_player_is_currently_on)
-{
-    int step_to_move_forward = 0;
-    string color_of_card;
-    bool isDouble = false;
-    int number_to_determine_color =  generateRandom(0,99);
-    int number_to_determine_double = generateRandom(0,99);
 
-    //determine color
-    if(number_to_determine_color <= 32)
-    {
-        color_of_card = "magenta";
-    }
-    else if(number_to_determine_color >= 33 && number_to_determine_color <= 65)
-    {
-        color_of_card = "green";
-    }
-    else
-    {
-        color_of_card = "blue";
-    }
-    //determine double
-    if(number_to_determine_double <= 74)
-    {
-        isDouble = false;
-    }
-    else
-    {
-        isDouble = true;
-    }
-
-    if(isDouble)
-    {
-        cout << "You got a double " << color_of_card << "card. " << "Your game piece advanced two " << color_of_card << " tiles." << endl;
-    }
-    else
-    {
-        cout << "You got a " << color_of_card << " card. " << "Your game piece advanced to the next " << color_of_card << " tiles." << endl;
-    }
-
-    //determine steps moved forward
-    if(color_player_is_currently_on == MAGENTA && color_of_card == "magenta")
-    {
-        step_to_move_forward = 3;
-    }
-    else if(color_player_is_currently_on == MAGENTA && color_of_card == "green")
-    {
-        step_to_move_forward = 1;
-    }
-    else if(color_player_is_currently_on == MAGENTA && color_of_card == "blue")
-    {
-        step_to_move_forward = 2;
-    }
-    else if(color_player_is_currently_on == GREEN && color_of_card == "green")
-    {
-        step_to_move_forward = 3;
-    }
-    else if(color_player_is_currently_on == GREEN && color_of_card == "blue")
-    {
-        step_to_move_forward = 1;
-    }
-    else if(color_player_is_currently_on == GREEN && color_of_card == "magenta")
-    {
-        step_to_move_forward = 2;
-    }
-    else if(color_player_is_currently_on == BLUE && color_of_card == "blue")
-    {
-        step_to_move_forward = 3;
-    }
-    else if(color_player_is_currently_on == BLUE && color_of_card == "magenta")
-    {
-        step_to_move_forward = 1;
-    }
-    else if(color_player_is_currently_on == BLUE && color_of_card == "green")
-    {
-        step_to_move_forward = 2;
-    }
-
-    if(isDouble)
-    {
-        step_to_move_forward += 3;
-    }
-    cout << "you move forward " << step_to_move_forward << " positions" << endl;
-    return step_to_move_forward;
-
-
-
-
-    return 0;
-}
 
 
 
@@ -180,7 +86,18 @@ int main()
     GameResources all_game_resources = GameResources();
     all_game_resources.loadCharacters();
     all_game_resources.loadInCandies();
+
+    //generate board and special tiles
+    //generate candystores
     Board game_board = Board();
+    game_board.generateCandyStore();
+    vector <Candy> all_candies_in_this_game = all_game_resources.getAllCandyInThisGame();
+    game_board.loadCandyStores(all_candies_in_this_game);
+    //generate treasures
+    game_board.generateTreasureTiles();
+    //generate other special tiles
+    game_board.generateSpecialTile();
+
 
     //int num_participants = 2;
     //loading players
@@ -195,35 +112,86 @@ int main()
     cin >> player1_character_selection;
     all_game_resources.load_player_one(player1_character_selection, player1_name);
 
-    
+    cout << "Player 2 please enter your name" << endl;
+    cin >> player2_name;
+    cout << "Awesome! Here are a list of characterss a player can select from: " << endl;
+    all_game_resources.printCharacterList();
+    cin >> player2_character_selection;
+    all_game_resources.load_player_two(player2_character_selection, player2_name);
 
-    
 
+    int player_1_moves = 0;
+    int player_2_moves = 0;
     while(!player_one_win && !player_two_win)
     {
         //player 1 turn
-        int player1_current_position = game_board.getPlayerOnePosition();
-        string player1_current_tile_color = game_board.getTileColor(player1_current_position);
-        int player_1_moves = drawCardsAndMove(player1_current_tile_color);
-        
+        int player_one_action = 0;
+        cout << "Player 1 it is your turn" << endl;
+        cout << "Enter 1 to draw a card" << endl;
+        cout << "Enter 2 to use a candy" << endl;
+        cout << "Enter 3 to display stats" << endl;
+        cin >> player_one_action;
+        if(player_one_action == 1)
+        {
+            int player1_current_position = game_board.getPlayerOnePosition();
+            string player1_current_tile_color = game_board.getTileColor(player1_current_position);
+            player_1_moves = drawCardsAndMove(player1_current_tile_color);
+            player_one_win = !(game_board.movePlayerOne(player_1_moves));
+            cout << "Here is the board after your move" << endl;
+            game_board.displayBoard();
+            cout << endl;
+        }
+        else if (player_one_action == 2)
+        {
+
+        }
+        else if(player_one_action == 3)
+        {
+            all_game_resources.print_player1_stats();
+            cout << endl;
+        }
         //moveplayer returns true if you can be moved forward and returns false if you are at castle
-        player_one_win = !(game_board.movePlayerOne(player_1_moves));
+        if(player_one_win)
+        {
+            cout << "Player 1 wins" << endl;
+            break;
+        }
 
         //player 2 turn
-        int player2_current_position = game_board.getPlayerTwoPosition();
-        string player2_current_tile_color = game_board.getTileColor(player2_current_position);
-        int player_2_moves = drawCardsAndMove(player2_current_tile_color);
+        int player_2_action = 0;
+        cout << "Player 2 it is your turn" << endl;
+        cout << "Enter 1 to draw a card" << endl;
+        cin >> player_2_action;
+        if(player_2_action == 1)
+        {
+            int player2_current_position = game_board.getPlayerTwoPosition();
+            string player2_current_tile_color = game_board.getTileColor(player2_current_position);
+            player_2_moves = drawCardsAndMove(player2_current_tile_color);
+            player_two_win = !(game_board.movePlayerTwo(player_2_moves));
+            cout << "Here is the board after your move" << endl;
+            game_board.displayBoard();
+            cout << endl;
+        }
+        else if(player_2_action == 2)
+        {
 
-        player_two_win = !(game_board.movePlayerTwo(player_2_moves));
-
-        game_board.displayBoard();
-
-
+        }
+        else if(player_2_action == 3)
+        {
+            all_game_resources.print_player2_stats();
+            cout << endl;
+        }
+        if (player_two_win)
+        {
+            cout << "Player 2 wins" << endl;
+            break;
+        }
     }
+
     cout << game_board.getPlayerOnePosition()<<endl;
     cout << game_board.getPlayerTwoPosition()<<endl;
 
-    all_game_resources.print_player1_stats();
+
     
     return 0;
 }

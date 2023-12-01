@@ -7,6 +7,6 @@ Fearsome Fudge|Forms a gummy barrier on a chosen tile and opponent loses 1 turn|
 Venomous Vortex|Decreases opponents stamina by 15 units(moderate)|stamina|-15|poison|20
 Bubblegum Blast|Protects against mild poison candy|other|1|immunity|15
 Mystic Marshmallow|Boosts player's stamina by 20 units|stamina|20|magical|30
-Sparkling Sapphire|Protects against mild and moderate poison candies|other|2|immunity|20
-Toxic Taffy|Decreases opponents stamina by 20 units(strong)|stamina|-20|poison|25
+Sparkling Sapphire|Protects against mild and oderate poison candies|other|2|immunity|20
+Toxic Taffy|Decreases opponents stamina by 20 munits(strong)|stamina|-20|poison|25
 Caramel Comet|Protects against all poison candies|other|3|immunity|25

@@ -4,6 +4,10 @@
 #include <sstream>
 #include "GameResources.h"
 
+int generateRandomBetweenMaxAndMin(int min, int max)
+{
+    return (rand() % (max - min + 1) + min);
+}
 
 //the split function to split a line by delimeter
 int split(string input_string, char seperator, string arr[], int arr_size)
@@ -30,6 +34,13 @@ GameResources :: GameResources()
     _characters_count = 0;
     _player_1 = Player();
     _player_2 = Player();
+    _candy_counts = 0;
+}
+
+//getters
+vector <Candy> GameResources :: getAllCandyInThisGame()
+{
+    return _all_candy_data;
 }
 
 //loading characters from file
@@ -85,20 +96,23 @@ void GameResources :: printCharacterList()
 {
     for(int i = 0; i < _characters_count; i++)
     {
-        cout << "Name: " << _character_list[i].name << endl;
-        cout << "Stamina " << _character_list[i].stamina <<endl;
-        cout << "Gold " << _character_list[i].gold<<endl;
-        //print out all candies
-        for(int j = 0; j < 9; j++)
+        if(_character_list[i].picked == false)
         {
-            string this_candy = _character_list.at(i).candies_owned[j];
-            if(this_candy != "")
+            cout << "Name: " << _character_list[i].name << endl;
+            cout << "Stamina " << _character_list[i].stamina <<endl;
+            cout << "Gold " << _character_list[i].gold<<endl;
+            //print out all candies
+            for(int j = 0; j < 9; j++)
             {
-                cout << "[" << this_candy << "]";
-            }
-            if(j % 3 ==2)
-            {
-                cout << endl;
+                string this_candy = _character_list.at(i).candies_owned[j];
+                if(this_candy != "")
+                {
+                    cout << "[" << this_candy << "]";
+                }
+                if(j % 3 ==2)
+                {
+                    cout << endl;
+                }
             }
         }
 
@@ -193,6 +207,7 @@ bool GameResources :: load_player_one(string character_choosen_name, string play
         if(character_choosen_name == _character_list.at(i).name)
         {
             character_choosen = _character_list[i];
+            _character_list[i].picked = true;
             character_invalid = false;
             break;
         }
@@ -213,11 +228,11 @@ bool GameResources :: load_player_one(string character_choosen_name, string play
         if(character_choosen.candies_owned[i] != "")
         {
             Candy this_candy;
-            for(int i = 0; i < _candy_counts; i++)
+            for(int j = 0; j < _candy_counts; j++)
             {
-                if(character_choosen.candies_owned[i] == _all_candy_data.at(i).name)
+                if(character_choosen.candies_owned[i] == _all_candy_data.at(j).name)
                 {
-                    this_candy = _all_candy_data[i];
+                    this_candy = _all_candy_data[j];
                     _player_1.addCandyToInventory(this_candy);
                     break;
                 }
@@ -238,6 +253,8 @@ bool GameResources :: load_player_two(string character_choosen_name, string play
         if(character_choosen_name == _character_list.at(i).name)
         {
             character_choosen = _character_list[i];
+            _character_list[i].picked = true;
+            character_invalid = false;
             break;
         }
     }
@@ -256,11 +273,11 @@ bool GameResources :: load_player_two(string character_choosen_name, string play
         if(character_choosen.candies_owned[i] != "")
         {
             Candy this_candy;
-            for(int i = 0; i < _candy_counts; i++)
+            for(int j = 0; j < _candy_counts; j++)
             {
-                if(character_choosen.candies_owned[i] == _all_candy_data.at(i).name)
+                if(character_choosen.candies_owned[i] == _all_candy_data.at(j).name)
                 {
-                    this_candy = _all_candy_data[i];
+                    this_candy = _all_candy_data[j];
                     _player_2.addCandyToInventory(this_candy);
                     break;
                 }
@@ -274,9 +291,9 @@ void GameResources :: print_player1_stats()
 {
     cout << "Here are your stats:" << endl;
     cout << "Player name: " << _player_1.getPlayerName() <<endl;
-    cout << "Character: "<< _player_1.getPlayerCharacterName();
-    cout << "Stamina: " << _player_1.getPlayerStamina();
-    cout << "Gold: " << _player_1.getPlayerGold();
+    cout << "Character: "<< _player_1.getPlayerCharacterName() << endl;
+    cout << "Stamina: " << _player_1.getPlayerStamina() << endl;
+    cout << "Gold: " << _player_1.getPlayerGold() << endl;
     cout << "Candies: " << endl;
     _player_1.printInventory();
 }
@@ -291,3 +308,44 @@ void GameResources :: print_player2_stats()
     cout << "Candies: " << endl;
     _player_2.printInventory();
 }
+
+void GameResources :: money_robbery(int player_who_arrives_first)
+{
+    //player 1 arrives first
+    if(player_who_arrives_first == 1)
+    {
+        cout << "Player 1 attempts to rob Player 2" << endl;
+        if(_player_2.getRobbersRepel())
+        {
+            cout << "Player 2 has robbers repel, player 2 loses robbers repel but lose 0 gold" << endl;
+            _player_2.setRobbersRepel(false);
+        }
+        else
+        {
+            int gold_lost = generateRandomBetweenMaxAndMin(5, 30);
+            cout << "Player 2 lose " << gold_lost <<" gold" << endl;
+            int player2_current_gold = _player_2.getPlayerGold();
+            int player2_gold_after_robbery = player2_current_gold - gold_lost;
+            _player_2.setPlayerGold(player2_gold_after_robbery);
+        }
+    }
+    //player 2 arrives first
+    else
+    {
+        cout << "Player 2 attempts to rob Player 1" << endl;
+        if(_player_1.getRobbersRepel())
+        {
+            cout << "Player 1 has robbers repel, player 2 loses robbers repel but lose 0 gold" << endl;
+            _player_1.setRobbersRepel(false);
+        }
+        else
+        {
+            int gold_lost = generateRandomBetweenMaxAndMin(5, 30);
+            cout << "Player 1 lose " << gold_lost << " gold" << endl;
+            int player1_current_gold = _player_1.getPlayerGold();
+            int player1_gold_after_robbery = player1_current_gold - gold_lost;
+            _player_1.setPlayerGold(player1_gold_after_robbery);
+        }
+    }
+}
+

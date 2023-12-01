@@ -4,6 +4,8 @@
 #include "Player.h"
 using namespace std;
 
+int generateRandomBetweenMaxAndMin(int, int);
+
 struct Character
 {
     string name;
@@ -40,6 +42,7 @@ class GameResources
 
     public:
         GameResources();
+        vector <Candy> getAllCandyInThisGame();
         
         void loadCharacters(); 
         void printCharacterList();
@@ -52,6 +55,8 @@ class GameResources
         void print_player1_stats();
         void print_player2_stats();
 
+        //if 2 players land on same tile the person who arrives first move back and rob other player
+        void money_robbery(int);
 
 
         /*

@@ -1,3 +1,3 @@
 character name|stamina|gold|candies
 Toffee_Todd|200|20|Frosty Fizz,Toxic Taffy,Bubblegum Blast,Caramel Comet,Lucky Licorice
-JellyBean_Jane|100|50|Breezy Butterscotch,Lucky Licorice,Fearsome Fudge,Crimson Crystal
+JellyBean_Jane|100|50|Frosty Fizz,Lucky Licorice,Fearsome Fudge,Crimson Crystal

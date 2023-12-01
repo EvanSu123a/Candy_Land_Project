@@ -1,5 +1,103 @@
 #include "Board.h"
 
+//function used to generate random numbers
+
+int generateRandom(int min, int max)
+{
+    return (rand() % (max - min + 1) + min);
+}
+
+int drawCardsAndMove(string color_player_is_currently_on)
+{
+    int step_to_move_forward = 0;
+    string color_of_card;
+    bool isDouble = false;
+    int number_to_determine_color =  generateRandom(0,99);
+    int number_to_determine_double = generateRandom(0,99);
+
+    //determine color
+    if(number_to_determine_color <= 32)
+    {
+        color_of_card = "magenta";
+    }
+    else if(number_to_determine_color >= 33 && number_to_determine_color <= 65)
+    {
+        color_of_card = "green";
+    }
+    else
+    {
+        color_of_card = "blue";
+    }
+    //determine double
+    if(number_to_determine_double <= 74)
+    {
+        isDouble = false;
+    }
+    else
+    {
+        isDouble = true;
+    }
+
+    if(isDouble)
+    {
+        cout << "You got a double " << color_of_card << "card. " << "Your game piece advanced two " << color_of_card << " tiles." << endl;
+    }
+    else
+    {
+        cout << "You got a " << color_of_card << " card. " << "Your game piece advanced to the next " << color_of_card << " tiles." << endl;
+    }
+
+    //determine steps moved forward
+    if(color_player_is_currently_on == MAGENTA && color_of_card == "magenta")
+    {
+        step_to_move_forward = 3;
+    }
+    else if(color_player_is_currently_on == MAGENTA && color_of_card == "green")
+    {
+        step_to_move_forward = 1;
+    }
+    else if(color_player_is_currently_on == MAGENTA && color_of_card == "blue")
+    {
+        step_to_move_forward = 2;
+    }
+    else if(color_player_is_currently_on == GREEN && color_of_card == "green")
+    {
+        step_to_move_forward = 3;
+    }
+    else if(color_player_is_currently_on == GREEN && color_of_card == "blue")
+    {
+        step_to_move_forward = 1;
+    }
+    else if(color_player_is_currently_on == GREEN && color_of_card == "magenta")
+    {
+        step_to_move_forward = 2;
+    }
+    else if(color_player_is_currently_on == BLUE && color_of_card == "blue")
+    {
+        step_to_move_forward = 3;
+    }
+    else if(color_player_is_currently_on == BLUE && color_of_card == "magenta")
+    {
+        step_to_move_forward = 1;
+    }
+    else if(color_player_is_currently_on == BLUE && color_of_card == "green")
+    {
+        step_to_move_forward = 2;
+    }
+
+    if(isDouble)
+    {
+        step_to_move_forward += 3;
+    }
+    cout << "you move forward " << step_to_move_forward << " positions" << endl;
+    return step_to_move_forward;
+
+
+
+
+    return 0;
+}
+
 Board::Board()
 {
     resetBoard();
@@ -14,10 +112,10 @@ void Board::resetBoard()
     for (int i = 0; i < _BOARD_SIZE - 1; i++)
     {
         current_color = COLORS[i % COLOR_COUNT];
-        new_tile = {current_color, "regular tile", false, false, false, 0};
+        new_tile = {current_color, "regularTile", false, false, false, false, 0};
         _tiles[i] = new_tile;
     }
-    new_tile = {ORANGE, "regular tile", false, false, false, 0};
+    new_tile = {ORANGE, "regularTile", false, false, false, false, 0};
     _tiles[_BOARD_SIZE - 1] = new_tile;
 
     _candy_store_count = 0;
@@ -97,6 +195,252 @@ void Board::displayBoard()
     }
     cout << ORANGE << "Castle" << RESET << endl;
 }
+
+void Board :: generateCandyStore()
+{
+    //generate first candystore on a megenta tile from 0-26
+    int num_1 = generateRandom(0, 8);
+    int first_candy_store_position = num_1 * 3;
+    addCandyStore(first_candy_store_position);
+    _tiles[first_candy_store_position].is_candy_store = true;
+    _tiles[first_candy_store_position].tile_type = "candyStore";
+    //generate second candystore on a green tile between 27-53
+    int num_2 = generateRandom(0, 8);
+    int second_candy_store_position = num_2 * 3 + 28;
+    addCandyStore(second_candy_store_position);
+    _tiles[second_candy_store_position].is_candy_store = true;
+    _tiles[second_candy_store_position].tile_type = "candyStore";
+    //generate third candystore on a blue tile between 54-81
+    int num_3 = generateRandom(0, 8);
+    int third_candy_store_position = num_3 * 3 +56;
+    addCandyStore(third_candy_store_position);
+    _tiles[third_candy_store_position].is_candy_store = true;
+    _tiles[third_candy_store_position].tile_type = "candyStore";
+}
+
+void Board :: loadCandyStores(vector <Candy> list_of_all_candies)
+{
+    //pick 3 random candy for the first candy store
+    int seperate_numbers_1 = 0;
+    vector <Candy> candies_1;
+    bool is_candy_used_1[] = {false, false, false, false, false, false, false, false, false, false, false};
+    //while there are less then 3 seperate candy picked
+    while(seperate_numbers_1 < 3)
+    {
+        int candy_position = generateRandom(0,10);
+        if(!is_candy_used_1[candy_position])
+        {
+            seperate_numbers_1 += 1;
+            is_candy_used_1[candy_position] = true;
+            candies_1.push_back(list_of_all_candies.at(candy_position));
+        }
+    }
+    //load the first candyStore
+    CandyStores candystore_1;
+    candystore_1.name = "candystore 1";
+    candystore_1.position = _candy_store_position[0];
+    candystore_1.candy_store_stocks.push_back(candies_1.at(0));
+    candystore_1.candy_store_stocks.push_back(candies_1.at(1));
+    candystore_1.candy_store_stocks.push_back(candies_1.at(2));
+    _candy_stores[0] = candystore_1;
+
+    //pick 3 random candy for the second candy store
+    int seperate_numbers_2 = 0;
+    vector <Candy> candies_2;
+    bool is_candy_used_2[] = {false, false, false, false, false, false, false, false, false, false, false};
+    while(seperate_numbers_2 < 3)
+    {
+        int candy_position = generateRandom(0,10);
+        if(!is_candy_used_2[candy_position])
+        {
+            seperate_numbers_2 += 1;
+            is_candy_used_2[candy_position] = true;
+            candies_2.push_back(list_of_all_candies.at(candy_position));
+        }
+    }
+    //load the second candyStore
+    CandyStores candystore_2;
+    candystore_2.name = "candystore 2";
+    candystore_2.position = _candy_store_position[1];
+    candystore_2.candy_store_stocks.push_back(candies_2.at(0));
+    candystore_2.candy_store_stocks.push_back(candies_2.at(1));
+    candystore_2.candy_store_stocks.push_back(candies_2.at(2));
+    _candy_stores[1] = candystore_2;
+
+    //pick 3 random candy for the third candy store
+    int seperate_numbers_3 = 0;
+    vector <Candy> candies_3;
+    bool is_candy_used_3[] = {false, false, false, false, false, false, false, false, false, false, false};
+    while(seperate_numbers_3 < 3)
+    {
+        int candy_position = generateRandom(0,10);
+        if(!is_candy_used_3[candy_position])
+        {
+            seperate_numbers_3 += 1;
+            is_candy_used_3[candy_position] = true;
+            candies_3.push_back(list_of_all_candies.at(candy_position));
+        }
+    }
+    //load the second candyStore
+    CandyStores candystore_3;
+    candystore_3.name = "candystore 3";
+    candystore_3.position = _candy_store_position[2];
+    candystore_3.candy_store_stocks.push_back(candies_3.at(0));
+    candystore_3.candy_store_stocks.push_back(candies_3.at(1));
+    candystore_3.candy_store_stocks.push_back(candies_3.at(2));
+    _candy_stores[2] = candystore_3;
+
+}
+
+void Board :: displayCandyStore(int position)
+{
+    if(position >=0 && position <= 26)
+    {
+        cout << "Welcome to " << _candy_stores[0].name <<endl;
+        cout << "Here is a list of candies in the candy store." << endl;
+        cout << endl;
+        for(int i = 0; i < 3; i++)
+        {
+            displayCandy(_candy_stores[0].candy_store_stocks[i]);
+            cout << endl;
+        }
+    }
+    else if(position >= 27 && position <= 53)
+    {
+        cout << "Welcome to " << _candy_stores[1].name <<endl;
+        cout << "Here is a list of candies in the candy store." << endl;
+        cout << endl;
+        for(int i = 0; i < 3; i++)
+        {
+            displayCandy(_candy_stores[1].candy_store_stocks[i]);
+            cout << endl;
+        }
+    }
+    else
+    {
+        cout << "Welcome to " << _candy_stores[2].name <<endl;
+        cout << "Here is a list of candies in the candy store." << endl;
+        cout << endl;
+        for(int i = 0; i < 3; i++)
+        {
+            displayCandy(_candy_stores[2].candy_store_stocks[i]);
+            cout << endl;
+        }
+    }
+    
+}
+
+void Board :: displayCandy(Candy candy_to_be_displayed)
+{
+    cout << "Name: " << candy_to_be_displayed.name << endl;
+    cout << "Description: " << candy_to_be_displayed.description << endl;
+    cout << "Effect: " <<candy_to_be_displayed.effect_type <<endl;
+    cout << "Effect value: " << candy_to_be_displayed.effect_value <<endl;
+    cout << "Candy type: " <<candy_to_be_displayed.candy_type <<endl;
+    cout << "Price: " <<candy_to_be_displayed.price <<endl;
+}
+
+//generate treasure tiles
+void Board :: generateTreasureTiles()
+{
+    int treasure_count = 0;
+    //generate 6 different random number that is not on a special tile
+    while(treasure_count < 6)
+    {
+        int treasure_position = generateRandom(3,81);
+        if(_tiles[treasure_position].tile_type == "regularTile")
+        {
+            _tiles[treasure_position].is_treasure = true;
+            treasure_count += 1;
+            //randomly generate what type of treasure it is
+            int treasure_type = generateRandom(0, 99);
+            if(treasure_type <= 29)
+            {
+                _tiles[treasure_position].tile_type = "staminaRefill";
+            }
+            else if(treasure_type >= 29 && treasure_type <= 39)
+            {
+                _tiles[treasure_position].tile_type = "goldWindfall";
+            }
+            else if(treasure_type >= 40 && treasure_type <= 69)
+            {
+                _tiles[treasure_position].tile_type = "robbersRepel";
+            }
+            else
+            {
+                //candy acquisitiion
+                //decide what type of candy acquisition it would be
+                int type_of_candy_acquisition = generateRandom(0,99);
+                if(type_of_candy_acquisition <= 69)
+                {
+                    _tiles[treasure_position].tile_type = "jellybeanOfVigor";
+                }
+                else
+                {
+                    _tiles[treasure_position].tile_type = "treasureHunterTruffle";
+                }
+            }
+        }
+    }
+}
+
+void Board :: generateSpecialTile()
+{
+    //generate 21 different special tiles
+    int special_tile_count = 0;
+    while(special_tile_count < 21)
+    {
+        int special_tile_position = generateRandom(3,81);
+        if(_tiles[special_tile_position].tile_type == "regularTile")
+        {
+            _tiles[special_tile_position].is_special_tile = true;
+            special_tile_count += 1;
+            //decide what type of special tile it is
+            int special_tile_type = generateRandom(0,99);
+            if(special_tile_type <= 29)
+            {
+                _tiles[special_tile_position].tile_type = "shortcutTile";
+            }
+            else if(special_tile_type >= 30 && special_tile_type <= 59)
+            {
+                _tiles[special_tile_position].tile_type = "iceCreamShopTile";
+            }
+            else if(special_tile_type >= 60 && special_tile_type <= 89)
+            {
+                _tiles[special_tile_position].tile_type = "gumdropForestTile";
+            }
+            else
+            {
+                _tiles[special_tile_position].tile_type = "gingerbreadHouseTile";
+            }
+        }
+    }
+}
+
+bool Board :: check_for_same_tile_constraints(int person_who_arrived_first)
+{
+    if(_player1_position == _player2_position)
+    {
+        //the first person arrives move back one
+        if(person_who_arrived_first == 1)
+        {
+            cout << "Player 1 and player 2 landed on the same tile, player 1 move back 1 tile" << endl;
+            _player1_position -= 1;
+            return true;
+        }
+        else
+        {
+            cout << "Player 1 and player 2 landed on the same tile, player 2 move back 1 tile" << endl;
+            _player2_position -=1;
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
 //setters for player positions
 bool Board::setPlayerOnePosition(int new_position)
 {
@@ -133,6 +477,10 @@ string Board :: getTileColor(int position)
     return _tiles[position].color;
 }
 string Board :: getTileEffect(int position)
+{
+    return _tiles[position].tile_type;
+}
+string Board :: getTileType(int position)
 {
     return _tiles[position].tile_type;
 }

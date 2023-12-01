@@ -15,6 +15,8 @@
 using namespace std;
 
 
+int generateRandom(int min, int max);
+int drawCardsAndMove(string color_player_is_currently_on);
 
 
 
@@ -28,6 +30,7 @@ struct Tile
     bool is_special_tile;
     bool is_treasure;
     bool is_gummy_tile;
+    bool is_candy_store;
     int gummy_tile_value;
 
     /*potential tile effects
@@ -56,6 +59,13 @@ make candyStore a struct
 candy store will contain a array of candies sold
 */
 
+struct CandyStores
+{
+    string name;
+    int position;
+    vector <Candy> candy_store_stocks;
+};
+
 
 class Board 
 {
@@ -63,6 +73,7 @@ private:
     const static int _BOARD_SIZE = 83;
     Tile _tiles[_BOARD_SIZE];
     const static int _MAX_CANDY_STORE = 3;
+    CandyStores _candy_stores[_MAX_CANDY_STORE];
     int _candy_store_position[_MAX_CANDY_STORE];
     int _candy_store_count;
     int _player1_position;
@@ -100,12 +111,13 @@ public:
 
 /*
 load candystore
+takes in a vector of Candy which is all the candies in this game
 there are 11 candies in the game
 randomly generate 3 number from 0-10 and check if they are duplicates
 return a candystore struct with those 3 candies being filled
 */
 
-    void loadCandyStore();
+    void loadCandyStores(vector <Candy>);
 
 
 /*
@@ -118,7 +130,8 @@ check if the candy is in the candy store
 return the candy the user bought
 */
 
-    void displayCandyStore();
+    void displayCandyStore(int);
+    void displayCandy(Candy);
     Candy buyFromCandyStore();
 
 /*
@@ -210,17 +223,12 @@ if it is a special tile
 */
 
 /*
-check for same tile constraints function takes in a int indicating player 1 or player 2
-the other player moves back 1 tile
-prints out  messages to inform the other player they moved back 1 tile
-
-if the other player does not have robbers repel
-    generate random number between 5-30 and the other player lose that much gold
-    inform the other player they lose that much gold
-else
-    prints message inform the other player lost robber's repel but did not get gold stolen
+check for same tile constraints
+return true if the 2 player are on same tile
+return false if they are not
+move the first person who arrived there back 1 tile
 */
-    void check_for_same_tile_constraints(int);
+    bool check_for_same_tile_constraints(int);
 
 
 
@@ -232,13 +240,16 @@ else
     int getCandyStoreCount() const;
     string getTileColor(int);
     string getTileEffect(int);
+    string getTileType(int);
     Tile getTile(int);
     int getPlayerOnePosition() const;
     int getPlayerTwoPosition() const;
     
+    
 
     bool addCandyStore(int);
     bool isPositionCandyStore(int); 
+
 
     bool movePlayerOne(int tile_to_move_forward);
     bool movePlayerTwo(int tile_to_move_forward);
