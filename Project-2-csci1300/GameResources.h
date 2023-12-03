@@ -56,7 +56,7 @@ class GameResources
         void print_player2_stats();
 
         //if 2 players land on same tile the person who arrives first move back and rob other player
-        void money_robbery(int);
+        void moneyRobbery(int);
 
 
         /*
@@ -103,8 +103,8 @@ class GameResources
         
         */
 
-       void apply_poison_and_immunity_candy(Candy);
-       int use_candy(Candy);
+       void applyPoisonAndImmunityCandy(Candy);
+       int useCandy(Candy);
 
        /*
 apply special candy function
@@ -122,7 +122,7 @@ else if the candy is treasure hunter's truffle
     else
         the user lose the hidden treasure
 */
-        void apply_special_candy(Candy);
+        void applySpecialCandy(Candy);
 
 /*
 play rock paper scissors function returns a bool
@@ -141,8 +141,18 @@ if winner is not decided
         return false if the computer wins
 */
 
-        void play_rock_paper_scissors();
+
+        bool play_riddle();
+        bool play_rock_paper_scissors();
+
+        void setPlayer1(Player);
+        void setPlayer2(Player);
+
+        void player1LoseGold(int);
+        void player2LoseGold(int);
         
+        void player1GainStamina(int);
+        void player2GainStamina(int);
 };
 
 #endif

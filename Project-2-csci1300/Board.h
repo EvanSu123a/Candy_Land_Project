@@ -202,6 +202,7 @@ while(special tile count < 21)
 */
     void generateSpecialTile();
 
+
 /*
 check special tile
 when a player land on a tile check for special tile and do its actions
@@ -221,16 +222,21 @@ if it is a special tile
         if user have immunity candy
             the user loses that candy
 */
+    bool isSpecialTile(int);
 
+    
 /*
 check for same tile constraints
 return true if the 2 player are on same tile
 return false if they are not
 move the first person who arrived there back 1 tile
 */
-    bool check_for_same_tile_constraints(int);
+    bool checkForSameTileConstraints(int);
 
-
+    void excecuteShortCutTile(int);
+    void excecuteIceCreamShopTile(int, string);
+    int excecuteGumDropForestTile(int);
+    
 
 
     bool setPlayerOnePosition(int);
@@ -248,7 +254,7 @@ move the first person who arrived there back 1 tile
     
 
     bool addCandyStore(int);
-    bool isPositionCandyStore(int); 
+    bool isPositionCandyStore(int);
 
 
     bool movePlayerOne(int tile_to_move_forward);

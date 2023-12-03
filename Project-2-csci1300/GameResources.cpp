@@ -309,7 +309,7 @@ void GameResources :: print_player2_stats()
     _player_2.printInventory();
 }
 
-void GameResources :: money_robbery(int player_who_arrives_first)
+void GameResources :: moneyRobbery(int player_who_arrives_first)
 {
     //player 1 arrives first
     if(player_who_arrives_first == 1)
@@ -349,3 +349,87 @@ void GameResources :: money_robbery(int player_who_arrives_first)
     }
 }
 
+//play riddle
+//return true if player solved riddle
+//return false if player failed it
+bool GameResources :: play_riddle()
+{
+    cout << _riddle_counts << endl;
+    int riddle_number = generateRandomBetweenMaxAndMin(0,19);
+    Riddle riddle_to_play = _all_riddles.at(riddle_number);
+    string player_answer;
+    string actual_answer = riddle_to_play.answer;
+    cout << riddle_to_play.riddle << " enter answer:" << endl;
+    cin >> player_answer;
+    //compare player answer to the actual answer
+    if(player_answer == actual_answer)
+    {
+        cout << "You solved the riddle!" << endl;
+        return true;
+    }
+    else
+    {
+        cout << "You failed the riddle" <<endl;
+        return false;
+    }
+}
+
+void GameResources :: setPlayer1(Player player1_state)
+{
+    _player_1 = player1_state;
+}
+
+void GameResources :: setPlayer2(Player player2_state)
+{
+    _player_2 = player2_state;
+}
+
+void GameResources ::player1LoseGold(int gold_loss)
+{
+    int gold_player1_have = _player_1.getPlayerGold() - gold_loss;
+    if(gold_player1_have > 0)
+    {
+        _player_1.setPlayerGold(gold_player1_have);
+    }
+    else
+    {
+        _player_1.setPlayerGold(0);
+    }
+}
+void GameResources :: player2LoseGold(int gold_loss)
+{
+    int gold_player2_have = _player_2.getPlayerGold() - gold_loss;
+    if(gold_player2_have > 0)
+    {
+        _player_2.setPlayerGold(gold_player2_have);
+    }
+    else
+    {
+        _player_2.setPlayerGold(0);
+    }
+}
+
+void GameResources :: player1GainStamina(int stamina_gained)
+{
+    int stamina_player1_have = _player_1.getPlayerStamina() + stamina_gained;
+    if(stamina_player1_have < 100)
+    {
+        _player_1.setPlayerStamina(stamina_player1_have);
+    }
+    else
+    {
+        _player_1.setPlayerStamina(100);
+    }
+}
+void GameResources :: player2GainStamina(int stamina_gained)
+{
+    int stamina_player2_have = _player_2.getPlayerStamina() + stamina_gained;
+    if(stamina_player2_have < 100)
+    {
+        _player_2.setPlayerStamina(stamina_player2_have);
+    }
+    else
+    {
+        _player_2.setPlayerStamina(100);
+    }
+}

@@ -53,7 +53,6 @@ return move needed
 
 
 
-
 /*
 do calamities
 take in a tile position
@@ -86,6 +85,8 @@ int main()
     GameResources all_game_resources = GameResources();
     all_game_resources.loadCharacters();
     all_game_resources.loadInCandies();
+    all_game_resources.loadInRiddles();
+    
 
     //generate board and special tiles
     //generate candystores
@@ -126,62 +127,156 @@ int main()
     {
         //player 1 turn
         int player_one_action = 0;
-        cout << "Player 1 it is your turn" << endl;
-        cout << "Enter 1 to draw a card" << endl;
-        cout << "Enter 2 to use a candy" << endl;
-        cout << "Enter 3 to display stats" << endl;
-        cin >> player_one_action;
-        if(player_one_action == 1)
+        while(player_one_action != 1)
         {
-            int player1_current_position = game_board.getPlayerOnePosition();
-            string player1_current_tile_color = game_board.getTileColor(player1_current_position);
-            player_1_moves = drawCardsAndMove(player1_current_tile_color);
-            player_one_win = !(game_board.movePlayerOne(player_1_moves));
-            cout << "Here is the board after your move" << endl;
-            game_board.displayBoard();
+            cout << "Player 1 it is your turn" << endl;
             cout << endl;
-        }
-        else if (player_one_action == 2)
-        {
+            // cout << "Enter 1 to draw a card" << endl;
+            // cout << "Enter 2 to use a candy" << endl;
+            // cout << "Enter 3 to display stats" << endl;
+            // cin >> player_one_action;
+            player_one_action = 1;
+            if(player_one_action == 1)
+            {
+                int player1_current_position = game_board.getPlayerOnePosition();
+                string player1_current_tile_color = game_board.getTileColor(player1_current_position);
+                player_1_moves = drawCardsAndMove(player1_current_tile_color);
+                player_one_win = !(game_board.movePlayerOne(player_1_moves));
+                //check for special tiles
+                bool current_position_is_a_special_tile_1 = game_board.isSpecialTile(player1_current_position);
+                if(current_position_is_a_special_tile_1)
+                {
+                    string tile_type = game_board.getTileEffect(player1_current_position);
+                    if(tile_type == "shortcutTile")
+                    {
+                        game_board.excecuteShortCutTile(1);
+                    }
+                    if(tile_type  == "iceCreamShopTile")
+                    {
+                        int player_1_pos = game_board.getPlayerOnePosition();
+                        string color = game_board.getTileColor(player_1_pos); 
+                        game_board.excecuteIceCreamShopTile(1, color);
+                    }
+                    if(tile_type == "gumdropForestTile")
+                    {
+                        int gold_loss = game_board.excecuteGumDropForestTile(1);
+                        all_game_resources.player1LoseGold(gold_loss);
+                    }
+                    // if(tile_type == "gingerbreadHouseTile")
+                    // {
+                        
+                    // }
+                    if(tile_type == "staminaRefill")
+                    {
+                        cout << "You stepped on a treasure tile, play a riddle to get it" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            int stamina_generated = generateRandom(10, 30);
+                            cout << "You gained " << stamina_generated << " stamina" << endl;
+                            all_game_resources.player1GainStamina(stamina_generated);
+                        }
+                    }
+                }
 
+
+                cout << "You are now at position " << game_board.getPlayerOnePosition() << endl;
+                cout << "Here is the board after your move" << endl;
+                game_board.displayBoard();
+                cout << endl;
+                
+            }
+            else if (player_one_action == 2)
+            {
+
+            }
+            else if(player_one_action == 3)
+            {
+                all_game_resources.print_player1_stats();
+                cout << endl;
+            }
         }
-        else if(player_one_action == 3)
-        {
-            all_game_resources.print_player1_stats();
-            cout << endl;
-        }
-        //moveplayer returns true if you can be moved forward and returns false if you are at castle
-        if(player_one_win)
+        //check if player1 reached castle
+        if(game_board.getPlayerOnePosition() >= 82)
         {
             cout << "Player 1 wins" << endl;
             break;
         }
+        
 
         //player 2 turn
         int player_2_action = 0;
-        cout << "Player 2 it is your turn" << endl;
-        cout << "Enter 1 to draw a card" << endl;
-        cin >> player_2_action;
-        if(player_2_action == 1)
+        while(player_2_action != 1)
         {
-            int player2_current_position = game_board.getPlayerTwoPosition();
-            string player2_current_tile_color = game_board.getTileColor(player2_current_position);
-            player_2_moves = drawCardsAndMove(player2_current_tile_color);
-            player_two_win = !(game_board.movePlayerTwo(player_2_moves));
-            cout << "Here is the board after your move" << endl;
-            game_board.displayBoard();
+            cout << "Player 2 it is your turn" << endl;
             cout << endl;
-        }
-        else if(player_2_action == 2)
-        {
+            // cout << "Enter 1 to draw a card" << endl;
+            // cout << "Enter 2 to use a candy" << endl;
+            // cout << "Enter 3 to display stats" << endl;
+            // cin >> player_2_action;
+            player_2_action = 1;
+            if(player_2_action == 1)
+            {
+                int player2_current_position = game_board.getPlayerTwoPosition();
+                string player2_current_tile_color = game_board.getTileColor(player2_current_position);
+                player_2_moves = drawCardsAndMove(player2_current_tile_color);
+                player_two_win = !(game_board.movePlayerTwo(player_2_moves));
+                //check for special tiles
+                bool current_position_is_a_special_tile_2 = game_board.isSpecialTile(player2_current_position);
+                if(current_position_is_a_special_tile_2)
+                {
+                    string tile_type = game_board.getTileEffect(player2_current_position);
+                    if(tile_type == "shortcutTile")
+                    {
+                        game_board.excecuteShortCutTile(2);
+                    }
+                    if(tile_type  == "iceCreamShopTile")
+                    {
+                        int player_2_pos = game_board.getPlayerTwoPosition();
+                        string color = game_board.getTileColor(player_2_pos); 
+                        game_board.excecuteIceCreamShopTile(2, color);
+                    }
+                    if(tile_type == "gumdropForestTile")
+                    {
+                        int gold_loss = game_board.excecuteGumDropForestTile(2);
+                        all_game_resources.player2LoseGold(gold_loss);
+                    }
+                    // if(tile_type == "gingerbreadHouseTile")
+                    // {
+                        
+                    // }
+                    if(tile_type == "staminaRefill")
+                    {
+                        cout << "You stepped on a treasure tile, play a riddle to get it" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            int stamina_generated = generateRandom(10, 30);
+                            cout << "You gained " << stamina_generated << " stamina" << endl;
+                            all_game_resources.player2GainStamina(stamina_generated);
+                        }
+                    }
+                }
+                
+                cout << "You are now at position " << game_board.getPlayerTwoPosition() << endl;
+                cout << "Here is the board after your move" << endl;
+                game_board.displayBoard();
+                cout << endl;
+                
 
+            }
+            else if(player_2_action == 2)
+            {
+
+            }
+            else if(player_2_action == 3)
+            {
+                all_game_resources.print_player2_stats();
+                cout << endl;
+            }
         }
-        else if(player_2_action == 3)
-        {
-            all_game_resources.print_player2_stats();
-            cout << endl;
-        }
-        if (player_two_win)
+        //check if player 2 reached castle
+        if (game_board.getPlayerTwoPosition() >= 82)
         {
             cout << "Player 2 wins" << endl;
             break;
@@ -195,3 +290,5 @@ int main()
     
     return 0;
 }
+
+

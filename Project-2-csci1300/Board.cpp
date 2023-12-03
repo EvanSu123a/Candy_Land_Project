@@ -405,7 +405,7 @@ void Board :: generateSpecialTile()
             {
                 _tiles[special_tile_position].tile_type = "iceCreamShopTile";
             }
-            else if(special_tile_type >= 60 && special_tile_type <= 89)
+            else if(special_tile_type >= 60 && special_tile_type <= 84)
             {
                 _tiles[special_tile_position].tile_type = "gumdropForestTile";
             }
@@ -417,7 +417,22 @@ void Board :: generateSpecialTile()
     }
 }
 
-bool Board :: check_for_same_tile_constraints(int person_who_arrived_first)
+bool Board :: isSpecialTile(int position)
+{
+    string tile_effect = _tiles[position].tile_type;
+    if(tile_effect == "regularTile")
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
+
+bool Board :: checkForSameTileConstraints(int person_who_arrived_first)
 {
     if(_player1_position == _player2_position)
     {
@@ -440,6 +455,75 @@ bool Board :: check_for_same_tile_constraints(int person_who_arrived_first)
         return false;
     }
 }
+
+void Board :: excecuteShortCutTile(int player_number)
+{
+    //add 4 to player position
+    if(player_number == 1)
+    {
+        cout << "You stepped on a shortcut tile, you move forward 4 position" << endl;
+        _player1_position += 4;
+    }
+    else if(player_number == 2)
+    {
+        cout << "You stepped on a shortcut tile, you move forward 4 position" << endl;
+        _player2_position += 4;
+    }
+}
+
+void Board :: excecuteIceCreamShopTile(int player_number, string color)
+{
+    //draw another card and move by that much
+    if(player_number == 1)
+    {
+        cout << "You stepped on a icecream shop tile, you get to draw another card" << endl;
+        int steps_to_move = drawCardsAndMove(color);
+        _player1_position += steps_to_move;
+    }
+    else if(player_number == 2)
+    {
+        cout << "You stepped on a icecream shop tile, you get to draw another card" << endl;
+        int steps_to_move = drawCardsAndMove(color);
+        _player2_position += steps_to_move;
+    }
+}
+
+int Board :: excecuteGumDropForestTile(int player_number)
+{
+    //move the player back 4 tiles
+    if(player_number == 1)
+    {
+        cout << "You stepped on a gum drop forest tile, you backwards 4 tiles, ";
+        if(_player1_position <= 5)
+        {
+            _player1_position = 1;
+        }
+        else
+        {
+            _player1_position -= 4;
+        }
+    }
+    else if(player_number == 2)
+    {
+        cout << "You stepped on a gum drop forest tile, you backwards 4 tiles, ";
+        if(_player1_position <= 6)
+        {
+            _player1_position = 2;
+        }
+        else
+        {
+            _player1_position -= 4;
+        }
+    }
+
+    //generate random number of gold player losses
+    int num_gold_loss = generateRandom(5, 10);
+    cout << "and you lost " << num_gold_loss <<" gold" << endl;
+    return num_gold_loss;
+}
+
+
+
 
 //setters for player positions
 bool Board::setPlayerOnePosition(int new_position)
@@ -532,7 +616,6 @@ bool Board::movePlayerOne(int tile_to_move_forward)
     if(new_player_position < 0 || new_player_position >= _BOARD_SIZE)
     {
         _player1_position = 82;
-        return false;
     }
     _player1_position = new_player_position;
     return true;
