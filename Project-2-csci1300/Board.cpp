@@ -346,7 +346,7 @@ Candy Board :: buyFromCandyStore(int player_position)
 {   
     Candy this_candy;
     int candy_name = 0;
-    cout << "What candy would you like to purchase, enter the number corresponding to the candy" << endl;
+    cout << "What candy would you like to purchase, enter the number corresponding to the candy, enter 9 to exit the candy store" << endl;
     cin >> candy_name;
     if(player_position >= 0 && player_position <= 26)
     {
@@ -355,6 +355,10 @@ Candy Board :: buyFromCandyStore(int player_position)
         if(candy_name >= 1 && candy_name <= 3)
         {
             this_candy = all_candy_in_store.at(candy_name -1);
+        }
+        else if(candy_name == 9)
+        {
+            cout << "You exitted the candy store" << endl;
         }
         else
         {
@@ -370,6 +374,10 @@ Candy Board :: buyFromCandyStore(int player_position)
         {
             this_candy = all_candy_in_store.at(candy_name -1);
         }
+        else if(candy_name == 9)
+        {
+            cout << "You exitted the candy store" << endl;
+        }
         else
         {
             cout << "Candy unavaliable" << endl;
@@ -382,6 +390,10 @@ Candy Board :: buyFromCandyStore(int player_position)
         if(candy_name >= 1 && candy_name <= 3)
         {
             this_candy = all_candy_in_store.at(candy_name -1);
+        }
+        else if(candy_name == 9)
+        {
+            cout << "You exitted the candy store" << endl;
         }
         else
         {

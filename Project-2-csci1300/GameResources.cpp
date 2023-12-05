@@ -70,7 +70,6 @@ void GameResources :: loadCharacters()
             string character_attributes [4];
             //first 3 character attributes are actual attributes
             split(character_line_read_in, '|', character_attributes, 4);
-            cout << character_attributes[3] << endl;
             string character_starting_candies [9];
             //the last character attribute is candies
             split(character_attributes[3], ',', character_starting_candies, 9);

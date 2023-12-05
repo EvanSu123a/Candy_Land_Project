@@ -286,6 +286,34 @@ int main()
                         }
                     }
                 }
+
+                //check for candystores
+                if(game_board.isPositionCandyStore(game_board.getPlayerOnePosition()))
+                {
+                    cout << "Player 1 you stepped on a candystore" << endl;
+                    cout << "Player 1 would you like to visit the candystore enter 1 to visit candystore and 0 to skip candy store" << endl;
+                    cin >> player_1_visit_candy_store;
+                    if(player_1_visit_candy_store == 1)
+                    {
+                        game_board.displayCandyStore(game_board.getPlayerOnePosition());
+                        Candy candy_player_1_bought = game_board.buyFromCandyStore(0);
+                        int cost = candy_player_1_bought.price;
+                        if(all_game_resources.getPlayer1Gold() >= cost)
+                        {
+                            if(candy_player_1_bought.name != "")
+                            {
+                                all_game_resources.player1AddCandy(candy_player_1_bought);  
+                                all_game_resources.player1LoseGold(cost);
+                                all_game_resources.print_player1_stats();
+                            }
+                        }
+                        else
+                        {
+                            cout << "Insufficient gold" << endl;
+                        }
+                    }
+                }
+
                 cout << "You are now at position " << game_board.getPlayerOnePosition() << endl;
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
@@ -412,6 +440,33 @@ int main()
                             {
                                 cout << "You unlocked treasure hunter's truffle" << endl;
                             }
+                        }
+                    }
+                }
+
+                //check for candystore
+                if(game_board.isPositionCandyStore(game_board.getPlayerTwoPosition()))
+                {   
+                    cout << "Player 2 you stepped on a candy store" << endl;
+                    cout << "Player 2 would you like to visit the candystore enter 1 to visit candystore and 0 to skip candy store" <<endl;
+                    cin >> player_2_visit_candy_store;
+                    if(player_2_visit_candy_store == 1)
+                    {
+                        game_board.displayCandyStore(0);
+                        Candy candy_player_2_bought = game_board.buyFromCandyStore(0);
+                        int cost = candy_player_2_bought.price;
+                        if(all_game_resources.getPlayer2Gold() >= cost)
+                        {
+                            if(candy_player_2_bought.name != "")
+                            {
+                                all_game_resources.player2AddCandy(candy_player_2_bought);
+                                all_game_resources.player1LoseGold(cost);
+                                all_game_resources.print_player2_stats();
+                            }
+                        }
+                        else
+                        {
+                            cout << "Insufficient gold" << endl;
                         }
                     }
                 }
