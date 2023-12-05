@@ -105,9 +105,9 @@ void Player:: removeCandyFromInventory(int position)
     Candy not_a_candy {"", "", "", 0, "", 0};
     for(int i = position; i < 8; i++)
     {
-        _inventory[i] = _inventory[i+1];
+        _inventory.at(i) = _inventory.at(i+1);
     }
-    _inventory[8] = not_a_candy;
+    _inventory.pop_back();
     _current_candy_amount -= 1;
 }
 

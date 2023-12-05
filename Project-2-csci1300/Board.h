@@ -132,7 +132,8 @@ return the candy the user bought
 
     void displayCandyStore(int);
     void displayCandy(Candy);
-    Candy buyFromCandyStore();
+    Candy buyFromCandyStore(int);
+
 
 /*
 check if tile is a special tile

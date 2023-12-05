@@ -59,8 +59,6 @@ void GameResources :: loadCharacters()
         //read in characters from file
         Character this_character;
         string character_line_read_in;
-        string character_attributes [4];
-        string character_starting_candies [9];
 
         //read the header
         string header;
@@ -69,24 +67,26 @@ void GameResources :: loadCharacters()
 
         while(getline(characters_file_in, character_line_read_in))
         {
-        //first 3 character attributes are actual attributes
-        split(character_line_read_in, '|', character_attributes, 4);
+            string character_attributes [4];
+            //first 3 character attributes are actual attributes
+            split(character_line_read_in, '|', character_attributes, 4);
+            cout << character_attributes[3] << endl;
+            string character_starting_candies [9];
+            //the last character attribute is candies
+            split(character_attributes[3], ',', character_starting_candies, 9);
             
-        //the last character attribute is candies
-        split(character_attributes[3], ',', character_starting_candies, 9);
-        
-        this_character.name = character_attributes[0];
-        this_character.stamina = stoi(character_attributes[1]);
-        this_character.gold = stoi(character_attributes[2]);
-
-        for(int i = 0; i < 9; i++)
-        {
+            this_character.name = character_attributes[0];
+            this_character.stamina = stoi(character_attributes[1]);
+            this_character.gold = stoi(character_attributes[2]);
+            //assign candies
+            for(int i = 0; i < 9; i++)
+            {
                 this_character.candies_owned[i] = character_starting_candies[i];
-        }
+            }
 
-            this_character.picked = false;
-            _character_list.push_back(this_character);
-            _characters_count ++;
+                this_character.picked = false;
+                _character_list.push_back(this_character);
+                _characters_count ++;
         }
     }
 }
@@ -289,24 +289,34 @@ bool GameResources :: load_player_two(string character_choosen_name, string play
 
 void GameResources :: print_player1_stats()
 {
-    cout << "Here are your stats:" << endl;
+    cout << "Here are your stats Player 1:" << endl;
     cout << "Player name: " << _player_1.getPlayerName() <<endl;
     cout << "Character: "<< _player_1.getPlayerCharacterName() << endl;
     cout << "Stamina: " << _player_1.getPlayerStamina() << endl;
     cout << "Gold: " << _player_1.getPlayerGold() << endl;
     cout << "Candies: " << endl;
     _player_1.printInventory();
+    if(_player_1.getRobbersRepel())
+    {
+        cout << endl;
+        cout << "Player 1 has robber's repel" << endl;
+    }
 }
 
 void GameResources :: print_player2_stats()
 {
-    cout << "Here are your stats:" << endl;
+    cout << "Here are your stats Player 2:" << endl;
     cout << "Player name: " << _player_2.getPlayerName() <<endl;
     cout << "Character: "<< _player_2.getPlayerCharacterName() <<endl;
     cout << "Stamina: " << _player_2.getPlayerStamina() <<endl;
     cout << "Gold: " << _player_2.getPlayerGold() <<endl;
     cout << "Candies: " << endl;
     _player_2.printInventory();
+    if(_player_2.getRobbersRepel())
+    {
+        cout << endl;
+        cout << "Player 2 has robber's repel" << endl;
+    }
 }
 
 void GameResources :: moneyRobbery(int player_who_arrives_first)
@@ -322,11 +332,22 @@ void GameResources :: moneyRobbery(int player_who_arrives_first)
         }
         else
         {
-            int gold_lost = generateRandomBetweenMaxAndMin(5, 30);
-            cout << "Player 2 lose " << gold_lost <<" gold" << endl;
-            int player2_current_gold = _player_2.getPlayerGold();
-            int player2_gold_after_robbery = player2_current_gold - gold_lost;
-            _player_2.setPlayerGold(player2_gold_after_robbery);
+            int gold_lost = generateRandomBetweenMaxAndMin(5, 10);
+            if(gold_lost <= _player_2.getPlayerGold())
+            {
+                cout << "Player 2 lose " << gold_lost <<" gold" << endl;
+                cout << "Player 1 gained " << gold_lost << " gold" << endl;
+                player1GainGold(gold_lost);
+                player2LoseGold(gold_lost);
+            }
+            else
+            {
+                cout << "Player 2 lose " << _player_2.getPlayerGold() << " gold" << endl;
+                cout << "Player 1 gain " << _player_2.getPlayerGold() << " gold" <<endl;
+                int gold = _player_2.getPlayerGold();
+                _player_2.setPlayerGold(0);
+                player1GainGold(gold);
+            }
         }
     }
     //player 2 arrives first
@@ -340,11 +361,22 @@ void GameResources :: moneyRobbery(int player_who_arrives_first)
         }
         else
         {
-            int gold_lost = generateRandomBetweenMaxAndMin(5, 30);
-            cout << "Player 1 lose " << gold_lost << " gold" << endl;
-            int player1_current_gold = _player_1.getPlayerGold();
-            int player1_gold_after_robbery = player1_current_gold - gold_lost;
-            _player_1.setPlayerGold(player1_gold_after_robbery);
+            int gold_lost = generateRandomBetweenMaxAndMin(5, 10);
+            if(gold_lost <= _player_1.getPlayerGold())
+            {
+                cout << "Player 1 loses " << gold_lost << " gold" <<endl; 
+                cout << "Player 2 gains " << gold_lost << " gold" << endl;
+                player1LoseGold(gold_lost);
+                player2GainGold(gold_lost);
+            }
+            else
+            {
+                cout << "Player 1 loses " << _player_1.getPlayerGold() << " gold" <<endl; 
+                cout << "Player 2 gains " << _player_1.getPlayerGold() << " gold" <<endl;
+                int gold = _player_1.getPlayerGold();
+                player2GainGold(gold);
+                _player_1.setPlayerGold(0);
+            }
         }
     }
 }
@@ -354,7 +386,6 @@ void GameResources :: moneyRobbery(int player_who_arrives_first)
 //return false if player failed it
 bool GameResources :: play_riddle()
 {
-    cout << _riddle_counts << endl;
     int riddle_number = generateRandomBetweenMaxAndMin(0,19);
     Riddle riddle_to_play = _all_riddles.at(riddle_number);
     string player_answer;
@@ -384,6 +415,16 @@ void GameResources :: setPlayer2(Player player2_state)
     _player_2 = player2_state;
 }
 
+int GameResources :: getPlayer1Gold()
+{
+    int gold = _player_1.getPlayerGold();
+    return gold;
+}
+int GameResources :: getPlayer2Gold()
+{
+    int gold = _player_2.getPlayerGold();
+    return gold;
+}
 void GameResources ::player1LoseGold(int gold_loss)
 {
     int gold_player1_have = _player_1.getPlayerGold() - gold_loss;
@@ -406,6 +447,30 @@ void GameResources :: player2LoseGold(int gold_loss)
     else
     {
         _player_2.setPlayerGold(0);
+    }
+}
+void GameResources :: player1GainGold(int gold_gained)
+{
+    int gold_player1_have = _player_1.getPlayerGold() + gold_gained;
+    if(gold_player1_have < 100)
+    {
+        _player_1.setPlayerGold(gold_player1_have);
+    }
+    else
+    {
+        _player_1.setPlayerGold(100);
+    }
+}
+void GameResources :: player2GainGold(int gold_gained)
+{
+    int gold_player2_have = _player_2.getPlayerGold() + gold_gained;
+    if(gold_player2_have < 100)
+    {
+        _player_2.setPlayerGold(gold_player2_have);
+    }
+    else
+    {
+        _player_2.setPlayerGold(100);
     }
 }
 
@@ -433,3 +498,30 @@ void GameResources :: player2GainStamina(int stamina_gained)
         _player_2.setPlayerStamina(100);
     }
 }
+void GameResources :: player1SetRobbersRepel(bool status)
+{
+    _player_1.setRobbersRepel(status);
+}
+void GameResources :: player2SetRobbersRepel(bool status)
+{
+    _player_2.setRobbersRepel(status);
+}
+void GameResources :: player1AddCandy(Candy to_be_added)
+{
+    _player_1.addCandyToInventory(to_be_added);
+}
+void GameResources :: player2AddCandy(Candy to_be_added)
+{
+    _player_2.addCandyToInventory(to_be_added);
+}
+void GameResources :: player1GetJellyBeanOfVigor()
+{
+    Candy jellybean = {"Jellybean of Vigor", "boost player's stamina by 50", "stamina", 50, "magical", 10};
+    _player_1.addCandyToInventory(jellybean);
+}
+void GameResources :: player2GetJellyBeanOfVigor()
+{
+    Candy jellybean = {"Jellybean of Vigor", "boost player's stamina by 50", "stamina", 50, "magical", 10};
+    _player_2.addCandyToInventory(jellybean);
+}
+

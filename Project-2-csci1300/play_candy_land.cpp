@@ -120,9 +120,64 @@ int main()
     cin >> player2_character_selection;
     all_game_resources.load_player_two(player2_character_selection, player2_name);
 
+    all_game_resources.print_player1_stats();
+    cout << endl << endl;
+    all_game_resources.print_player2_stats();
 
     int player_1_moves = 0;
     int player_2_moves = 0;
+    
+
+    int player_1_visit_candy_store = 0;
+    int player_2_visit_candy_store = 0;
+    //player 1 visit candy store at the start of the candy store
+    cout << endl;
+    cout << "Player 1 would you like to visit the candystore before game start enter 1 to visit candystore and 0 to skip candy store" << endl;
+    cin >> player_1_visit_candy_store;
+    if(player_1_visit_candy_store == 1)
+    {
+        game_board.displayCandyStore(0);
+        Candy candy_player_1_bought = game_board.buyFromCandyStore(0);
+        int cost = candy_player_1_bought.price;
+        if(all_game_resources.getPlayer1Gold() >= cost)
+        {
+            if(candy_player_1_bought.name != "")
+            {
+                all_game_resources.player1AddCandy(candy_player_1_bought);  
+                all_game_resources.player1LoseGold(cost);
+                all_game_resources.print_player1_stats();
+            }
+        }
+        else
+        {
+            cout << "Insufficient gold" << endl;
+        }
+    }
+    //player 2 visit the candystore at the start of the game
+    cout << "Player 2 would you like to visit the candystore before game start enter 1 to visit candystore and 0 to skip candy store" <<endl;
+    cin >> player_2_visit_candy_store;
+    if(player_2_visit_candy_store == 1)
+    {
+        game_board.displayCandyStore(0);
+        Candy candy_player_2_bought = game_board.buyFromCandyStore(0);
+        int cost = candy_player_2_bought.price;
+        if(all_game_resources.getPlayer2Gold() >= cost)
+        {
+            if(candy_player_2_bought.name != "")
+            {
+                all_game_resources.player2AddCandy(candy_player_2_bought);
+                all_game_resources.player1LoseGold(cost);
+                all_game_resources.print_player2_stats();
+            }
+        }
+        else
+        {
+            cout << "Insufficient gold" << endl;
+        }
+    }
+    
+    
+
     while(!player_one_win && !player_two_win)
     {
         //player 1 turn
@@ -143,6 +198,12 @@ int main()
                 player_1_moves = drawCardsAndMove(player1_current_tile_color);
                 player_one_win = !(game_board.movePlayerOne(player_1_moves));
                 //check for special tiles
+                if(game_board.checkForSameTileConstraints(2))
+                {
+                    all_game_resources.moneyRobbery(2);
+                    player1_current_position -=1;
+                    all_game_resources.print_player1_stats();
+                }
                 bool current_position_is_a_special_tile_1 = game_board.isSpecialTile(player1_current_position);
                 if(current_position_is_a_special_tile_1)
                 {
@@ -161,6 +222,7 @@ int main()
                     {
                         int gold_loss = game_board.excecuteGumDropForestTile(1);
                         all_game_resources.player1LoseGold(gold_loss);
+                        all_game_resources.print_player1_stats();
                     }
                     // if(tile_type == "gingerbreadHouseTile")
                     // {
@@ -168,7 +230,7 @@ int main()
                     // }
                     if(tile_type == "staminaRefill")
                     {
-                        cout << "You stepped on a treasure tile, play a riddle to get it" << endl;
+                        cout << "Player 1 you stepped on a treasure tile, play a riddle to get it" << endl;
                         bool solved = all_game_resources.play_riddle();
                         if(solved)
                         {
@@ -177,14 +239,57 @@ int main()
                             all_game_resources.player1GainStamina(stamina_generated);
                         }
                     }
+                    if(tile_type == "goldWindfall")
+                    {
+                        cout << "Player 1 you stepped on a treasure tile, play a riddle to gain gold!" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            int gold_gained = generateRandom(20, 40);
+                            cout << "You gained " << gold_gained << " gold" << endl;
+                            all_game_resources.player1GainGold(gold_gained);
+                            all_game_resources.print_player1_stats();
+                        }
+                    }
+                    if(tile_type == "robbersRepel")
+                    {
+                        cout << "Player 1 you stepped on a treasure tile, play a riddle to get robber's repel" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            all_game_resources.player1SetRobbersRepel(true);
+                            all_game_resources.print_player1_stats();
+                        }
+                    }
+                    if(tile_type == "jellybeanOfVigor")
+                    {
+                        cout << "Player 1 you stepped on a treasure tile, play a riddle to get a candy" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            all_game_resources.player1GetJellyBeanOfVigor();
+                            all_game_resources.print_player1_stats();
+                        }
+                    }
+                    if(tile_type == "treasureHunterTruffle")
+                    {
+                        cout << "Player 1 you stepped on a treasure! play a riddle to unlock it" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            cout << "You have unlocked treasure hunter truffle, win another riddle to access it" << endl;
+                            bool solved_truffle = all_game_resources.play_riddle();
+                            if(solved_truffle)
+                            {
+                                cout << "You unlocked treasure hunter's truffle" << endl;
+                            }
+                        }
+                    }
                 }
-
-
                 cout << "You are now at position " << game_board.getPlayerOnePosition() << endl;
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
                 cout << endl;
-                
             }
             else if (player_one_action == 2)
             {
@@ -222,6 +327,12 @@ int main()
                 player_2_moves = drawCardsAndMove(player2_current_tile_color);
                 player_two_win = !(game_board.movePlayerTwo(player_2_moves));
                 //check for special tiles
+                if(game_board.checkForSameTileConstraints(1))
+                {
+                    all_game_resources.moneyRobbery(1);
+                    player2_current_position -= 1;
+                    all_game_resources.print_player2_stats();
+                }
                 bool current_position_is_a_special_tile_2 = game_board.isSpecialTile(player2_current_position);
                 if(current_position_is_a_special_tile_2)
                 {
@@ -240,6 +351,7 @@ int main()
                     {
                         int gold_loss = game_board.excecuteGumDropForestTile(2);
                         all_game_resources.player2LoseGold(gold_loss);
+                        all_game_resources.print_player2_stats();
                     }
                     // if(tile_type == "gingerbreadHouseTile")
                     // {
@@ -247,7 +359,7 @@ int main()
                     // }
                     if(tile_type == "staminaRefill")
                     {
-                        cout << "You stepped on a treasure tile, play a riddle to get it" << endl;
+                        cout << "Player 2 you stepped on a treasure tile, play a riddle to get it" << endl;
                         bool solved = all_game_resources.play_riddle();
                         if(solved)
                         {
@@ -256,14 +368,57 @@ int main()
                             all_game_resources.player2GainStamina(stamina_generated);
                         }
                     }
+                    if(tile_type == "goldWindfall")
+                    {
+                        cout << "Player 2 you stepped on a treasure tile, play a riddle to gain gold!" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            int gold_gained = generateRandom(20, 40);
+                            cout << "You gained " << gold_gained << " gold" << endl;
+                            all_game_resources.player2GainGold(gold_gained);
+                            all_game_resources.print_player2_stats();
+                        }
+                    }
+                    if(tile_type == "robbersRepel")
+                    {
+                        cout << "Player 2 you stepped on a treasure tile, play a riddle to get robber's repel" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            all_game_resources.player2SetRobbersRepel(true);
+                            all_game_resources.print_player2_stats();
+                        }
+                    }
+                    if(tile_type == "jellybeanOfVigor")
+                    {
+                        cout << "Player 2 you stepped on a treasure tile, play a riddle to get a candy" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            all_game_resources.player1GetJellyBeanOfVigor();
+                            all_game_resources.print_player1_stats();
+                        }
+                    }
+                    if(tile_type == "treasureHunterTruffle")
+                    {
+                        cout << "Player 2 you stepped on a treasure! play a riddle to unlock it" << endl;
+                        bool solved = all_game_resources.play_riddle();
+                        if(solved)
+                        {
+                            cout << "You have unlocked treasure hunter truffle, win another riddle to access it" << endl;
+                            bool solved_truffle = all_game_resources.play_riddle();
+                            if(solved_truffle)
+                            {
+                                cout << "You unlocked treasure hunter's truffle" << endl;
+                            }
+                        }
+                    }
                 }
-                
                 cout << "You are now at position " << game_board.getPlayerTwoPosition() << endl;
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
                 cout << endl;
-                
-
             }
             else if(player_2_action == 2)
             {

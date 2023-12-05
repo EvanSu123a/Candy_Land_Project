@@ -102,9 +102,8 @@ class GameResources
         if a non gummy candy is used return -1;
         
         */
-
+       void applyMagicalCandy(Candy);
        void applyPoisonAndImmunityCandy(Candy);
-       int useCandy(Candy);
 
        /*
 apply special candy function
@@ -147,12 +146,26 @@ if winner is not decided
 
         void setPlayer1(Player);
         void setPlayer2(Player);
+        
+        int getPlayer1Gold();
+        int getPlayer2Gold();
 
         void player1LoseGold(int);
         void player2LoseGold(int);
+
+        void player1GainGold(int);
+        void player2GainGold(int);
         
         void player1GainStamina(int);
         void player2GainStamina(int);
+
+        void player1SetRobbersRepel(bool);
+        void player2SetRobbersRepel(bool);
+
+        void player1AddCandy(Candy);
+        void player2AddCandy(Candy);
+        void player1GetJellyBeanOfVigor();
+        void player2GetJellyBeanOfVigor();
 };
 
 #endif

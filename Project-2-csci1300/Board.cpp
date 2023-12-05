@@ -301,6 +301,7 @@ void Board :: displayCandyStore(int position)
         cout << endl;
         for(int i = 0; i < 3; i++)
         {
+            cout << i+1 << " :" << endl;
             displayCandy(_candy_stores[0].candy_store_stocks[i]);
             cout << endl;
         }
@@ -312,6 +313,7 @@ void Board :: displayCandyStore(int position)
         cout << endl;
         for(int i = 0; i < 3; i++)
         {
+            cout << i+1 << " :" << endl;
             displayCandy(_candy_stores[1].candy_store_stocks[i]);
             cout << endl;
         }
@@ -340,6 +342,55 @@ void Board :: displayCandy(Candy candy_to_be_displayed)
     cout << "Price: " <<candy_to_be_displayed.price <<endl;
 }
 
+Candy Board :: buyFromCandyStore(int player_position)
+{   
+    Candy this_candy;
+    int candy_name = 0;
+    cout << "What candy would you like to purchase, enter the number corresponding to the candy" << endl;
+    cin >> candy_name;
+    if(player_position >= 0 && player_position <= 26)
+    {
+        CandyStores this_candy_store = _candy_stores[0];
+        vector <Candy> all_candy_in_store = this_candy_store.candy_store_stocks;
+        if(candy_name >= 1 && candy_name <= 3)
+        {
+            this_candy = all_candy_in_store.at(candy_name -1);
+        }
+        else
+        {
+            cout << "Candy unavaliable" << endl;
+        }
+        
+    }
+    else if(player_position >= 27 && player_position <= 53)
+    {
+        CandyStores this_candy_store = _candy_stores[1];
+        vector <Candy> all_candy_in_store = this_candy_store.candy_store_stocks;
+        if(candy_name >= 1 && candy_name <= 3)
+        {
+            this_candy = all_candy_in_store.at(candy_name -1);
+        }
+        else
+        {
+            cout << "Candy unavaliable" << endl;
+        }
+    }
+    else
+    {
+        CandyStores this_candy_store = _candy_stores[2];
+        vector <Candy> all_candy_in_store = this_candy_store.candy_store_stocks;
+        if(candy_name >= 1 && candy_name <= 3)
+        {
+            this_candy = all_candy_in_store.at(candy_name -1);
+        }
+        else
+        {
+            cout << "Candy unavaliable" << endl;
+        }
+    }
+    return this_candy;
+    
+}
 //generate treasure tiles
 void Board :: generateTreasureTiles()
 {
@@ -358,7 +409,7 @@ void Board :: generateTreasureTiles()
             {
                 _tiles[treasure_position].tile_type = "staminaRefill";
             }
-            else if(treasure_type >= 29 && treasure_type <= 39)
+            else if(treasure_type >= 30 && treasure_type <= 39)
             {
                 _tiles[treasure_position].tile_type = "goldWindfall";
             }
@@ -371,7 +422,7 @@ void Board :: generateTreasureTiles()
                 //candy acquisitiion
                 //decide what type of candy acquisition it would be
                 int type_of_candy_acquisition = generateRandom(0,99);
-                if(type_of_candy_acquisition <= 69)
+                if(type_of_candy_acquisition <= 70)
                 {
                     _tiles[treasure_position].tile_type = "jellybeanOfVigor";
                 }
@@ -461,12 +512,12 @@ void Board :: excecuteShortCutTile(int player_number)
     //add 4 to player position
     if(player_number == 1)
     {
-        cout << "You stepped on a shortcut tile, you move forward 4 position" << endl;
+        cout << "Player 1 you stepped on a shortcut tile, you move forward 4 position" << endl;
         _player1_position += 4;
     }
     else if(player_number == 2)
     {
-        cout << "You stepped on a shortcut tile, you move forward 4 position" << endl;
+        cout << "Player 2 stepped on a shortcut tile, you move forward 4 position" << endl;
         _player2_position += 4;
     }
 }
@@ -476,13 +527,13 @@ void Board :: excecuteIceCreamShopTile(int player_number, string color)
     //draw another card and move by that much
     if(player_number == 1)
     {
-        cout << "You stepped on a icecream shop tile, you get to draw another card" << endl;
+        cout << "Player 1 you stepped on a icecream shop tile, you get to draw another card" << endl;
         int steps_to_move = drawCardsAndMove(color);
         _player1_position += steps_to_move;
     }
     else if(player_number == 2)
     {
-        cout << "You stepped on a icecream shop tile, you get to draw another card" << endl;
+        cout << "Player 2 you stepped on a icecream shop tile, you get to draw another card" << endl;
         int steps_to_move = drawCardsAndMove(color);
         _player2_position += steps_to_move;
     }
@@ -493,7 +544,7 @@ int Board :: excecuteGumDropForestTile(int player_number)
     //move the player back 4 tiles
     if(player_number == 1)
     {
-        cout << "You stepped on a gum drop forest tile, you backwards 4 tiles, ";
+        cout << "Player 1 you stepped on a gum drop forest tile, you backwards 4 tiles, ";
         if(_player1_position <= 5)
         {
             _player1_position = 1;
@@ -505,7 +556,7 @@ int Board :: excecuteGumDropForestTile(int player_number)
     }
     else if(player_number == 2)
     {
-        cout << "You stepped on a gum drop forest tile, you backwards 4 tiles, ";
+        cout << "Player 2 you stepped on a gum drop forest tile, you backwards 4 tiles, ";
         if(_player1_position <= 6)
         {
             _player1_position = 2;
