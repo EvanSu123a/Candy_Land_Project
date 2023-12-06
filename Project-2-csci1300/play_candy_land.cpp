@@ -107,14 +107,15 @@ int main()
     string player2_name;
     string player2_character_selection;
     cout << "Welcome to the game of candyland. Player 1 please enter your name" <<endl;
-    cin >> player1_name;
+    getline(cin, player1_name);
     cout << "Awesome! Here are a list of characters a player can select from:" << endl;
     all_game_resources.printCharacterList();
     cin >> player1_character_selection;
+    cin.ignore(100, '\n');
     all_game_resources.load_player_one(player1_character_selection, player1_name);
 
     cout << "Player 2 please enter your name" << endl;
-    cin >> player2_name;
+    getline(cin, player2_name);
     cout << "Awesome! Here are a list of characterss a player can select from: " << endl;
     all_game_resources.printCharacterList();
     cin >> player2_character_selection;
