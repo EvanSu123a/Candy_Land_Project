@@ -102,7 +102,6 @@ minues 1 from
 */
 void Player:: removeCandyFromInventory(int position)
 {
-    Candy not_a_candy {"", "", "", 0, "", 0};
     for(int i = position; i < 8; i++)
     {
         _inventory.at(i) = _inventory.at(i+1);
@@ -114,6 +113,19 @@ void Player:: removeCandyFromInventory(int position)
 Candy Player :: getCandyFromInventory(int position)
 {
     return _inventory.at(position);
+}
+
+Candy Player :: findCandy(string candy_name)
+{
+    Candy not_a_candy {"", "", "", 0, "", 0};
+    for(int i = 0; i < _current_candy_amount; i++)
+    {
+        if(candy_name == _inventory.at(i).name)
+        {
+            return _inventory.at(i);
+        }
+    }
+    return not_a_candy;
 }
 
 void Player :: printInventory()

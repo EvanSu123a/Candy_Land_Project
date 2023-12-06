@@ -497,7 +497,7 @@ bool Board :: isSpecialTile(int position)
 
 bool Board :: checkForSameTileConstraints(int person_who_arrived_first)
 {
-    if(_player1_position == _player2_position)
+    if(_player1_position == _player2_position && _player1_position>= 2 && _player2_position>= 2)
     {
         //the first person arrives move back one
         if(person_who_arrived_first == 1)

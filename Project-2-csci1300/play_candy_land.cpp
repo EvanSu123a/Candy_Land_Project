@@ -143,8 +143,10 @@ int main()
         {
             if(candy_player_1_bought.name != "")
             {
+                cout << "You have successfully bought " << candy_player_1_bought.name << endl;
                 all_game_resources.player1AddCandy(candy_player_1_bought);  
                 all_game_resources.player1LoseGold(cost);
+                cout <<endl;
                 all_game_resources.print_player1_stats();
             }
         }
@@ -165,8 +167,10 @@ int main()
         {
             if(candy_player_2_bought.name != "")
             {
+                cout << "You have successfully bought " <<candy_player_2_bought.name << endl;
                 all_game_resources.player2AddCandy(candy_player_2_bought);
                 all_game_resources.player1LoseGold(cost);
+                cout << endl;
                 all_game_resources.print_player2_stats();
             }
         }
@@ -186,11 +190,10 @@ int main()
         {
             cout << "Player 1 it is your turn" << endl;
             cout << endl;
-            // cout << "Enter 1 to draw a card" << endl;
-            // cout << "Enter 2 to use a candy" << endl;
-            // cout << "Enter 3 to display stats" << endl;
-            // cin >> player_one_action;
-            player_one_action = 1;
+            cout << "Enter 1 to draw a card" << endl;
+            cout << "Enter 2 to use a candy" << endl;
+            cout << "Enter 3 to display stats" << endl;
+            cin >> player_one_action;
             if(player_one_action == 1)
             {
                 int player1_current_position = game_board.getPlayerOnePosition();
@@ -296,14 +299,16 @@ int main()
                     if(player_1_visit_candy_store == 1)
                     {
                         game_board.displayCandyStore(game_board.getPlayerOnePosition());
-                        Candy candy_player_1_bought = game_board.buyFromCandyStore(0);
+                        Candy candy_player_1_bought = game_board.buyFromCandyStore(game_board.getPlayerOnePosition());
                         int cost = candy_player_1_bought.price;
                         if(all_game_resources.getPlayer1Gold() >= cost)
                         {
                             if(candy_player_1_bought.name != "")
                             {
+                                cout << "You have successfully purchased " << candy_player_1_bought.name << endl;
                                 all_game_resources.player1AddCandy(candy_player_1_bought);  
                                 all_game_resources.player1LoseGold(cost);
+                                cout << endl;
                                 all_game_resources.print_player1_stats();
                             }
                         }
@@ -313,7 +318,7 @@ int main()
                         }
                     }
                 }
-
+                cout << endl;
                 cout << "You are now at position " << game_board.getPlayerOnePosition() << endl;
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
@@ -321,7 +326,24 @@ int main()
             }
             else if (player_one_action == 2)
             {
-
+                cout << "Here are your stats"<< endl;
+                all_game_resources.print_player1_stats();
+                int candy_player_used;
+                cout << endl;
+                cout << "What candy do you want to use enter a number 1-9 corresponding to the position in your inventory" <<endl;
+                cin >> candy_player_used;
+                candy_player_used -= 1;
+                Candy candy_used = all_game_resources.findCandyFromPlayer1ByIndex(candy_player_used);
+                cout << candy_used.name << "used" << endl;
+                if(candy_used.name == "")
+                {
+                    cout << "Candy unavaliable" << endl;
+                }
+                else if(candy_used.candy_type == "magical")
+                {
+                    all_game_resources.applyMagicalCandy(1, candy_used);
+                }
+                
             }
             else if(player_one_action == 3)
             {
@@ -343,11 +365,10 @@ int main()
         {
             cout << "Player 2 it is your turn" << endl;
             cout << endl;
-            // cout << "Enter 1 to draw a card" << endl;
-            // cout << "Enter 2 to use a candy" << endl;
-            // cout << "Enter 3 to display stats" << endl;
-            // cin >> player_2_action;
-            player_2_action = 1;
+            cout << "Enter 1 to draw a card" << endl;
+            cout << "Enter 2 to use a candy" << endl;
+            cout << "Enter 3 to display stats" << endl;
+            cin >> player_2_action;
             if(player_2_action == 1)
             {
                 int player2_current_position = game_board.getPlayerTwoPosition();
@@ -452,15 +473,17 @@ int main()
                     cin >> player_2_visit_candy_store;
                     if(player_2_visit_candy_store == 1)
                     {
-                        game_board.displayCandyStore(0);
-                        Candy candy_player_2_bought = game_board.buyFromCandyStore(0);
+                        game_board.displayCandyStore(game_board.getPlayerTwoPosition());
+                        Candy candy_player_2_bought = game_board.buyFromCandyStore(game_board.getPlayerTwoPosition());
                         int cost = candy_player_2_bought.price;
                         if(all_game_resources.getPlayer2Gold() >= cost)
                         {
                             if(candy_player_2_bought.name != "")
                             {
+                                cout << "You have successfully purchased " << candy_player_2_bought.name << endl;
                                 all_game_resources.player2AddCandy(candy_player_2_bought);
                                 all_game_resources.player1LoseGold(cost);
+                                cout << endl;
                                 all_game_resources.print_player2_stats();
                             }
                         }
@@ -470,6 +493,7 @@ int main()
                         }
                     }
                 }
+                cout << endl;
                 cout << "You are now at position " << game_board.getPlayerTwoPosition() << endl;
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
@@ -477,7 +501,22 @@ int main()
             }
             else if(player_2_action == 2)
             {
-
+                cout << "Here are your stats"<< endl;
+                all_game_resources.print_player2_stats();
+                int candy_player_used;
+                cout << endl;
+                cout << "What candy do you want to use enter a number 1-9 corresponding to the index of the candy in your inventory" <<endl;
+                cin >> candy_player_used;
+                candy_player_used -= 1;
+                Candy candy_used = all_game_resources.findCandyFromPlayer2ByIndex(candy_player_used);
+                if(candy_used.name == "")
+                {
+                    cout << "Candy unavaliable" << endl;
+                }
+                else if(candy_used.candy_type == "magical")
+                {
+                    all_game_resources.applyMagicalCandy(2, candy_used);
+                }
             }
             else if(player_2_action == 3)
             {

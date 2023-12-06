@@ -380,6 +380,48 @@ void GameResources :: moneyRobbery(int player_who_arrives_first)
     }
 }
 
+//apply magical candy candy to regain stamina
+void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_applied)
+{
+    if(player_who_used_candy == 1)
+    {
+        if(candy_applied.name == "Frosty Fizz")
+        {
+            cout << "Player 1 you used Frosty Fizz you gain 10 stamina" << endl;
+            player1GainStamina(10);
+        }
+        if(candy_applied.name == "Crimson Crystal")
+        {
+            cout << "Player 1 you used Crimson Crystal and you gained 15 stamina" << endl;
+            player1GainStamina(15);
+        }
+        if(candy_applied.name == "Mystic Marshmallow")
+        {
+            cout << "Player 1 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
+            player1GainStamina(20);
+        }
+    }
+    if(player_who_used_candy == 2)
+    {
+        if(candy_applied.name == "Frosty Fizz")
+        {
+            cout << "Player 2 you used Frosty Fizz you gain 10 stamina" << endl;
+            player2GainStamina(10);
+        }
+        if(candy_applied.name == "Crimson Crystal")
+        {
+            cout << "Player 2 you used Crimson Crystal and you gained 15 stamina" << endl;
+            player2GainStamina(15);
+        }
+        if(candy_applied.name == "Mystic Marshmallow")
+        {
+            cout << "Player 2 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
+            player2GainStamina(20);
+        }
+        
+    }
+}
+
 //play riddle
 //return true if player solved riddle
 //return false if player failed it
@@ -522,5 +564,22 @@ void GameResources :: player2GetJellyBeanOfVigor()
 {
     Candy jellybean = {"Jellybean of Vigor", "boost player's stamina by 50", "stamina", 50, "magical", 10};
     _player_2.addCandyToInventory(jellybean);
+}
+
+Candy GameResources :: findCandyFromPlayer1ByIndex(int index)
+{
+    return _player_1.getCandyFromInventory(index);
+}
+Candy GameResources :: findCandyFromPlayer2ByIndex(int index)
+{
+    return _player_2.getCandyFromInventory(index);
+}
+Candy GameResources :: findCandyFromPlayer1(string candy_name)
+{
+    return _player_1.findCandy(candy_name);
+}
+Candy GameResources :: findCandyFromPlayer2(string candy_name)
+{
+    return _player_2.findCandy(candy_name);
 }
 

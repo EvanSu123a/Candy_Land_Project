@@ -102,7 +102,7 @@ class GameResources
         if a non gummy candy is used return -1;
         
         */
-       void applyMagicalCandy(Candy);
+       void applyMagicalCandy(int, Candy);
        void applyPoisonAndImmunityCandy(Candy);
 
        /*
@@ -166,6 +166,11 @@ if winner is not decided
         void player2AddCandy(Candy);
         void player1GetJellyBeanOfVigor();
         void player2GetJellyBeanOfVigor();
+
+        Candy findCandyFromPlayer1ByIndex(int);
+        Candy findCandyFromPlayer2ByIndex(int);
+        Candy findCandyFromPlayer1(string);
+        Candy findCandyFromPlayer2(string);
 };
 
 #endif

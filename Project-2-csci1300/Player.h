@@ -65,6 +65,7 @@ class Player
         void removeCandyFromInventory(int);
 
         Candy getCandyFromInventory(int);
+        Candy findCandy(string);
 
         void printInventory();
 };
