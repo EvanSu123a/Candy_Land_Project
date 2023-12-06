@@ -400,6 +400,11 @@ void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_a
             cout << "Player 1 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
             player1GainStamina(20);
         }
+        if(candy_applied.name == "Breezy Butterscotch")
+        {
+            cout << "Player 1 you used Breezy Butterscotch and you gained 30 stamina" <<endl;
+            player1GainGold(30);
+        }
     }
     if(player_who_used_candy == 2)
     {
@@ -416,7 +421,12 @@ void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_a
         if(candy_applied.name == "Mystic Marshmallow")
         {
             cout << "Player 2 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
-            player2GainStamina(20);
+            player2GainStamina(30);
+        }
+        if(candy_applied.name == "Breezy Butterscotch")
+        {
+            cout << "Player 2 you used Breezy Butterscotch and you gained 30 stamina" <<endl;
+            player2GainStamina(30);
         }
         
     }

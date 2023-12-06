@@ -10,3 +10,4 @@ Mystic Marshmallow|Boosts player's stamina by 20 units|stamina|20|magical|30
 Sparkling Sapphire|Protects against mild and oderate poison candies|other|2|immunity|20
 Toxic Taffy|Decreases opponents stamina by 20 munits(strong)|stamina|-20|poison|25
 Caramel Comet|Protects against all poison candies|other|3|immunity|25
+Breezy Butterscotch|Boosts player's stamina by 30 units|stamina|30|magical|30
