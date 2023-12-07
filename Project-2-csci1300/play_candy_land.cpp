@@ -15,11 +15,14 @@
 
 using namespace std;
 
+//function to generate calamities
 string generateCalamities()
 {
     int is_there_a_calamity = generateRandom(0,99);
+    //40% chance to get a calamity
     if(is_there_a_calamity <= 39)
     {
+        //assigning random probability to calamities
         int the_calamity_type = generateRandom(0,99);
         if(the_calamity_type <= 34)
         {
@@ -111,6 +114,7 @@ int main()
         game_board.displayCandyStore(0);
         Candy candy_player_1_bought = game_board.buyFromCandyStore(0);
         int cost = candy_player_1_bought.price;
+        //check for sufficient gold
         if(all_game_resources.getPlayer1Gold() >= cost)
         {
             if(candy_player_1_bought.name != "")
@@ -137,6 +141,7 @@ int main()
         int cost = candy_player_2_bought.price;
         if(all_game_resources.getPlayer2Gold() >= cost)
         {
+            //check for sufficient gold
             if(candy_player_2_bought.name != "")
             {
                 cout << "You have successfully bought " <<candy_player_2_bought.name << endl;
@@ -158,6 +163,7 @@ int main()
     {
         //player 1 turn
         int player_one_action = 0;
+        //ask the player to do actions until player moves
         while(player_one_action != 1)
         {
             cout << "Player 1 it is your turn" << endl;
@@ -198,6 +204,7 @@ int main()
                     player1_current_position -=1;
                     all_game_resources.print_player1_stats();
                 }
+                //check for special tiles
                 bool current_position_is_a_special_tile_1 = game_board.isSpecialTile(player1_current_position);
                 if(current_position_is_a_special_tile_1)
                 {
@@ -222,6 +229,7 @@ int main()
                     // {
                         
                     // }
+                    //check for treasures
                     if(tile_type == "staminaRefill")
                     {
                         cout << "Player 1 you stepped on a treasure tile, play a riddle to get it" << endl;
@@ -316,6 +324,7 @@ int main()
                         }
                     }
                 }
+                //display board to user after they moved
                 cout << endl;
                 cout << "You are now at position " << game_board.getPlayerOnePosition() << endl;
                 cout << "Here is the board after your move" << endl;
@@ -372,6 +381,7 @@ int main()
                     // all_game_resources.excecuteTaffyTrap(1);
                 }
             }
+            //if user wants to use a candy
             else if (player_one_action == 2)
             {
                 cout << "Here are your stats"<< endl;
@@ -382,6 +392,7 @@ int main()
                 cin >> candy_player_used;
                 candy_player_used -= 1;
                 Candy candy_used = all_game_resources.findCandyFromPlayer1ByIndex(candy_player_used);
+                //check for candy avaliability
                 if(candy_used.name == "")
                 {
                     cout << "Candy unavaliable" << endl;
@@ -410,6 +421,7 @@ int main()
                 // }
                 
             }
+            //if the user just want to check their own stats
             else if(player_one_action == 3)
             {
                 all_game_resources.print_player1_stats();
@@ -639,6 +651,7 @@ int main()
                     // all_game_resources.excecuteTaffyTrap(2);
                 }
             }
+            //player 2 uses a candy
             else if(player_2_action == 2)
             {
                 cout << "Here are your stats"<< endl;
@@ -676,6 +689,7 @@ int main()
                 //     }
                 // }
             }
+            //player 2 want to check their stats
             else if(player_2_action == 3)
             {
                 all_game_resources.print_player2_stats();
