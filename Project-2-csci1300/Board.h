@@ -32,32 +32,9 @@ struct Tile
     bool is_gummy_tile;
     bool is_candy_store;
     int gummy_tile_value;
-
-    /*potential tile effects
-    a bool variable check is it a special tile or normal tile
-    special tile
-        30% shortcut tile
-        30% icecreamstop tile
-        30% gumdrop forest tile
-        10% gingerhead house tile
-    treasure 6 of them
-        30% stamina refill
-        10% gold windfall
-        30% robber repel
-        30% candy acquisition
-            70% jellybean of vigor
-            30% treasure hunters truffle
-    candystore 3 of them
-
-    other special tiles
-    gummy tile when user use a candy on them
-    */
 };
 
-/*
-make candyStore a struct
-candy store will contain a array of candies sold
-*/
+
 
 struct CandyStores
 {

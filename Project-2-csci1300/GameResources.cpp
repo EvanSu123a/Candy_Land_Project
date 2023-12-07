@@ -214,7 +214,6 @@ bool GameResources :: load_player_one(string character_choosen_name, string play
     //check if the character user put is valid
     if(character_invalid)
     {
-        cout << "Invalid character Please select a valid character" << endl;
         return false;
     }
     //load stats
@@ -259,7 +258,6 @@ bool GameResources :: load_player_two(string character_choosen_name, string play
     }
     if(character_invalid)
     {
-        cout << "Invalid character Please select a valid character" << endl;
         return false;
     }
     //load stats

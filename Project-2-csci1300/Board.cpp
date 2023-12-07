@@ -6,7 +6,7 @@ int generateRandom(int min, int max)
 {
     return (rand() % (max - min + 1) + min);
 }
-
+//function used to draw cards and move player every step returns how much player moves
 int drawCardsAndMove(string color_player_is_currently_on)
 {
     int step_to_move_forward = 0;
@@ -294,6 +294,7 @@ void Board :: loadCandyStores(vector <Candy> list_of_all_candies)
 
 void Board :: displayCandyStore(int position)
 {
+    //determine which candy store it is then print all of its content
     if(position >=0 && position <= 26)
     {
         cout << "Welcome to " << _candy_stores[0].name <<endl;
@@ -348,6 +349,14 @@ Candy Board :: buyFromCandyStore(int player_position)
     int candy_name = 0;
     cout << "What candy would you like to purchase, enter the number corresponding to the candy, enter 9 to exit the candy store" << endl;
     cin >> candy_name;
+    if(cin.fail())
+    {
+        cout << "Invalid input, you skip this candy store" << endl;
+        cin.clear();
+        cin.ignore(100, '\n');
+        return this_candy;
+    }
+    //determine which candy store is it
     if(player_position >= 0 && player_position <= 26)
     {
         CandyStores this_candy_store = _candy_stores[0];

@@ -76,24 +76,40 @@ int main()
 
     //int num_participants = 2;
     //loading players
+    bool player1_selected_valid_characters = false;
+    bool player2_selected_valid_characters = false;
     string player1_name;
     string player1_character_selection;
     string player2_name;
     string player2_character_selection;
     cout << "Welcome to the game of candyland. Player 1 please enter your name" <<endl;
     getline(cin, player1_name);
-    cout << "Awesome! Here are a list of characters a player can select from:" << endl;
-    all_game_resources.printCharacterList();
-    cin >> player1_character_selection;
-    cin.ignore(100, '\n');
-    all_game_resources.load_player_one(player1_character_selection, player1_name);
-
+    //make sure user enters a valid character
+    while(!player1_selected_valid_characters)
+    {
+        cout << "Here are a list of characters a player can select from:" << endl;
+        all_game_resources.printCharacterList();
+        cin >> player1_character_selection;
+        cin.ignore(100, '\n');
+        player1_selected_valid_characters = all_game_resources.load_player_one(player1_character_selection, player1_name);
+        if(!player1_selected_valid_characters)
+        {
+            cout << "Invalid character, please select again" <<endl;
+        }
+    }
     cout << "Player 2 please enter your name" << endl;
     getline(cin, player2_name);
-    cout << "Awesome! Here are a list of characterss a player can select from: " << endl;
-    all_game_resources.printCharacterList();
-    cin >> player2_character_selection;
-    all_game_resources.load_player_two(player2_character_selection, player2_name);
+    while(!player2_selected_valid_characters)
+    {
+        cout << "Here are a list of characterss a player can select from: " << endl;
+        all_game_resources.printCharacterList();
+        cin >> player2_character_selection;
+        player2_selected_valid_characters = all_game_resources.load_player_two(player2_character_selection, player2_name);
+        if(!player2_selected_valid_characters)
+        {
+            cout << "Invalid character, please select again" << endl;
+        }
+    }
 
     all_game_resources.print_player1_stats();
     cout << endl << endl;
@@ -109,6 +125,13 @@ int main()
     cout << endl;
     cout << "Player 1 would you like to visit the candystore before game start enter 1 to visit candystore and 0 to skip candy store" << endl;
     cin >> player_1_visit_candy_store;
+    //if user enters invalid input clear cin
+    if(cin.fail())
+    {
+        cout << "Invalid input, you skipped the candy store" <<endl;
+        cin.clear();
+        cin.ignore(100,'\n');
+    }
     if(player_1_visit_candy_store == 1)
     {
         game_board.displayCandyStore(0);
@@ -134,6 +157,13 @@ int main()
     //player 2 visit the candystore at the start of the game
     cout << "Player 2 would you like to visit the candystore before game start enter 1 to visit candystore and 0 to skip candy store" <<endl;
     cin >> player_2_visit_candy_store;
+    //if user enters invalid input clear cin
+    if(cin.fail())
+    {
+        cout << "Invalid input, you skipped the candy store" <<endl;
+        cin.clear();
+        cin.ignore(100,'\n');
+    }
     if(player_2_visit_candy_store == 1)
     {
         game_board.displayCandyStore(0);
@@ -172,6 +202,12 @@ int main()
             cout << "Enter 2 to use a candy" << endl;
             cout << "Enter 3 to display stats" << endl;
             cin >> player_one_action;
+            if(cin.fail())
+            {
+                cin.clear();
+                cin.ignore(100,'\n');
+            }
+
             //check if player can actually move
             if(all_game_resources.getTurnsPlayer1CannotMove() < 0)
             {
@@ -427,6 +463,10 @@ int main()
                 all_game_resources.print_player1_stats();
                 cout << endl;
             }
+            else
+            {
+                cout << "Invalid input" << endl;
+            }
         }
         //check if player1 reached castle
         if(game_board.getPlayerOnePosition() >= 82)
@@ -446,6 +486,11 @@ int main()
             cout << "Enter 2 to use a candy" << endl;
             cout << "Enter 3 to display stats" << endl;
             cin >> player_2_action;
+            if(cin.fail())
+            {
+                cin.clear();
+                cin.ignore(100,'\n');
+            }
             //check if player can actually move
             if(all_game_resources.getTurnsPlayer2CannotMove() < 0)
             {
@@ -694,6 +739,10 @@ int main()
             {
                 all_game_resources.print_player2_stats();
                 cout << endl;
+            }
+            else
+            {
+                cout << "Invalid input" <<endl;
             }
         }
         //check if player 2 reached castle
