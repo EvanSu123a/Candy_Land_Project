@@ -946,3 +946,63 @@ int GameResources :: getTurnsPlayer2CannotMove()
 {
     return _player_2.getTurnsPlayerCannotMoveFor();
 }
+
+// void GameResources :: excecuteTaffyTrap(int player_number)
+// {
+//     if(player_number == 1)
+//     {
+//         vector <Candy> candy_player_1_has = _player_1.getAllCandy();
+//         int magical_candy_position = -1;
+//         bool has_magical_candy = false;
+//         cout <<"Player 1 you stepped on a taffy trap " <<endl;
+//         int size = candy_player_1_has.size();
+//         for(int i = 0; i < size; i++)
+//         {
+//             if(candy_player_1_has.at(i).candy_type == "magical")
+//             {
+//                 magical_candy_position = i;
+//                 has_magical_candy = true;
+//                 break;
+//             }
+//         }
+//         if(has_magical_candy)
+//         {
+//             cout << "You have a magical candy and you use the magical candy to get out of the trap" << endl;
+//             _player_1.removeCandyFromInventory(magical_candy_position);
+//         }
+//         else
+//         {
+//             cout << "You are trapped for 1 turn" << endl;
+//             immobilizePlayer1(-1);
+//         }
+//     }
+//     else if(player_number == 1)
+//     {
+//         vector <Candy> candy_player_2_has = _player_2.getAllCandy();
+//         int magical_candy_position = -1;
+//         bool has_magical_candy = false;
+//         cout <<"Player 2 you stepped on a taffy trap " <<endl;
+//         int size = candy_player_2_has.size();
+//         for(int i = 0; i < size; i++)
+//         {
+//             if(candy_player_2_has.at(i).candy_type == "magical")
+//             {
+//                 magical_candy_position = i;
+//                 has_magical_candy = true;
+//                 break;
+//             }
+//         }
+//         if(has_magical_candy)
+//         {
+//             cout << "You have a magical candy and you use the magical candy to get out of the trap" << endl;
+//             _player_2.removeCandyFromInventory(magical_candy_position);
+//         }
+//         else
+//         {
+//             cout << "You are trapped for 1 turn" << endl;
+//             immobilizePlayer2(-1);
+//         }
+//     }
+
+
+// }

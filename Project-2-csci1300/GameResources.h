@@ -183,6 +183,8 @@ if winner is not decided
         int getPlayer2Stamina();
         int getTurnsPlayer1CannotMove();
         int getTurnsPlayer2CannotMove();
+
+        // void excecuteTaffyTrap(int);
 };
 
 #endif

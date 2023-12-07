@@ -21,21 +21,21 @@ string generateCalamities()
     if(is_there_a_calamity <= 39)
     {
         int the_calamity_type = generateRandom(0,99);
-        if(the_calamity_type <= 0)
+        if(the_calamity_type <= 34)
         {
             return "candyBandits";
         } 
-        else if(the_calamity_type >=0 && the_calamity_type <= 0)
+        else if(the_calamity_type >=35 && the_calamity_type <= 64)
         {
             return "lollipopLabyrinth";
         }
-        else if(the_calamity_type >= 0 && the_calamity_type <= 100)
+        else if(the_calamity_type >= 65 && the_calamity_type <= 79)
         {
             return "candyAvalanche";
         }
         else
         {
-            return "taffyTrap";
+            return "";
         }
     }
     else
@@ -367,6 +367,10 @@ int main()
                         all_game_resources.player2LoseStamina(stamina_lost);
                     }
                 }
+                if(calamity == "taffyTrap")
+                {
+                    // all_game_resources.excecuteTaffyTrap(1);
+                }
             }
             else if (player_one_action == 2)
             {
@@ -629,6 +633,10 @@ int main()
                         all_game_resources.immobilizePlayer2(-1);
                         all_game_resources.player2LoseStamina(stamina_lost);
                     }
+                }
+                if(calamity == "taffyTrap")
+                {
+                    // all_game_resources.excecuteTaffyTrap(2);
                 }
             }
             else if(player_2_action == 2)
