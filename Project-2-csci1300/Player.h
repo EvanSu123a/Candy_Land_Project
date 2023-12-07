@@ -67,6 +67,8 @@ class Player
         Candy getCandyFromInventory(int);
         Candy findCandy(string);
 
+        vector <Candy> getAllCandy();
+
         void printInventory();
 };
 

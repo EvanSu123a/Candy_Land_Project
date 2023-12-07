@@ -695,3 +695,36 @@ bool Board::movePlayerTwo(int tile_to_move_forward)
     _player2_position = new_player_position;
     return true;
 }
+
+/*
+make a tile a gummy tile passing in the tile number and how much turns the player would be immobilized if they step on the gummy tile
+make the value of gummy tile value of that tile into the turns passed in
+*/
+void Board :: makeTileAGummyTile(int tile_number, int turns)
+{
+    _tiles[tile_number].gummy_tile_value = turns; 
+    _tiles[tile_number].tile_type = "gummyTile";
+}
+/*
+check if a tile is a gummy tile take in the tilenumber as parameter and return true if it is a gummy tile and false otherwise
+if(the gummy tile value at that tile is greater then 0)
+    it is a gummy tile
+else
+    it is not a gummy tile
+*/
+// bool Board :: isTileAGummyTile(int tile_number)
+// {
+//     if(_tiles[tile_number].gummy_tile_value >0)
+//     {
+//         return true;
+//     }
+//     else
+//     {
+//         return false;
+//     }
+// }
+
+// int Board:: getGummyValue(int tile_number)
+// {
+//     return _tiles[tile_number].gummy_tile_value;
+// }

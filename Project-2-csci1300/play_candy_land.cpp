@@ -15,63 +15,34 @@
 
 using namespace std;
 
-
-
-/*
-draw cards
-25% 
-25%
-25%
-8%
-8%
-9%
-then
-update player position
-function returns the number of steps moved ahead
-takes in the current color of the tilt player are on
-
-first generate a number between 0-99
-0-32 = MAGENTA
-33-65 = GREEN
-66-99 = BLUE
-
-then generate another number to determine single or double
-0-74 = single
-75-99 = double
-bool isDouble
-int number_move = 0;
-number move + 3 if it is a double card
-if same color +3
-if current magenta into green = 1
-if current magenta into blue = 2
-6 if else statements
-return move needed
-*/
-
-
-
-
-
-
-/*
-do calamities
-take in a tile position
-check if the tile position is a regular tile
-if it is a special tile then end function
-if it is a regular tile generate a number between 0-99
-if it is 0-39 then it is a calamity
-if it is 40-99 then it is not a calamity
-if it is a calamity generate another number between 0-99
-0-29 = candy bandits
-30-64 = lost in a lollipop labrinth
-65-79 = candy avalanch
-80-99 = sticky taffy trap
-*/
-
-/*
-
-*/
-
+string generateCalamities()
+{
+    int is_there_a_calamity = generateRandom(0,99);
+    if(is_there_a_calamity <= 39)
+    {
+        int the_calamity_type = generateRandom(0,99);
+        if(the_calamity_type <= 0)
+        {
+            return "candyBandits";
+        } 
+        else if(the_calamity_type >=0 && the_calamity_type <= 0)
+        {
+            return "lollipopLabyrinth";
+        }
+        else if(the_calamity_type >= 0 && the_calamity_type <= 100)
+        {
+            return "candyAvalanche";
+        }
+        else
+        {
+            return "taffyTrap";
+        }
+    }
+    else
+    {
+        return "noCalamity";
+    }
+}
 int main()
 {
     //set random seed
@@ -195,8 +166,27 @@ int main()
             cout << "Enter 2 to use a candy" << endl;
             cout << "Enter 3 to display stats" << endl;
             cin >> player_one_action;
-            if(player_one_action == 1)
+            //check if player can actually move
+            if(all_game_resources.getTurnsPlayer1CannotMove() < 0)
             {
+                //if player is currently immobilized get turns cannot move minues 1 and exit the loop
+                all_game_resources.player1Get1TurnBack();
+                cout << "You are currently immobilized and you are still immobilized for the next " << -1 * all_game_resources.getTurnsPlayer1CannotMove() << " turns" << endl; 
+                break;
+            }
+            else if(player_one_action == 1)
+            {
+                if(all_game_resources.getPlayer1Stamina() == 0)
+                {
+                    //if player is 0 stamina, they cannot move for this turn and next 2 turns but gain 20 stamina back once they can move and exits loop
+                    cout <<"You have 0 stamina, you cannot move this turn and the next 2 turns" << endl;
+                    all_game_resources.player1GainStamina(20);
+                    all_game_resources.immobilizePlayer1(-2);
+                    break;
+                }
+                //use 1 stamina to move
+                all_game_resources.player1LoseStamina(1);
+
                 int player1_current_position = game_board.getPlayerOnePosition();
                 string player1_current_tile_color = game_board.getTileColor(player1_current_position);
                 player_1_moves = drawCardsAndMove(player1_current_tile_color);
@@ -289,6 +279,13 @@ int main()
                             }
                         }
                     }
+                    // if(tile_type == "gummyTile")
+                    // {
+                    //     cout <<"Player 1 you stepped on a gummy tile and you are immobolized for " << game_board.getGummyValue(game_board.getPlayerOnePosition()) << endl;
+                    //     all_game_resources.immobilizePlayer1(-1 * game_board.getGummyValue(game_board.getPlayerOnePosition()));
+                    // }
+
+                    //after the move 40% chance a calamity happends
                 }
 
                 //check for candystores
@@ -324,6 +321,52 @@ int main()
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
                 cout << endl;
+
+                //40% chance calamity happends after a turn
+                string calamity = generateCalamities();
+                if(calamity == "candyBandits")
+                {
+                    int lost = generateRandom (1, 10);
+                    cout << "You encountered candy bandits you lost " << lost << " gold";
+                    all_game_resources.player1LoseGold(lost);
+                }
+                if(calamity == "lollipopLabyrinth")
+                {
+                    cout << "You got lost in the lollipop labrinth" << endl;
+                    cout << "You lost 1 turn" << endl;
+                    cout << "You play rock paper scissors in attempt to recover the damage" << endl;
+                    bool rock_paper_scissors = all_game_resources.play_rock_paper_scissors();
+                    if(rock_paper_scissors)
+                    {
+                        cout <<"You won the rock paper scissors!" <<endl;
+                        cout <<"You do not lose 1 turn" << endl;
+                    }
+                    else
+                    {
+                        cout <<"You lose 1 turn" << endl;
+                        all_game_resources.immobilizePlayer1(-1);
+                    }
+                }
+                if(calamity == "candyAvalanche")
+                {
+                    cout << "You got struct by a candy avalanche" << endl;
+                    cout << "You play rock paper scissors in attempt to recover the damage" << endl;
+                    int stamina_lost = generateRandom(5,10);
+                    bool rock_paper_scissors = all_game_resources.play_rock_paper_scissors();
+                    if(rock_paper_scissors)
+                    {
+                        cout <<"You won the rock paper scissors!" << endl;
+                        cout <<"You do not take any damage" <<endl;
+                    }
+                    else
+                    {
+                        cout <<"You lose rock paper scissors" <<endl;
+                        cout <<"You lose 1 turn" <<endl;
+                        cout <<"You also lose " << stamina_lost <<" stamina" <<endl;
+                        all_game_resources.immobilizePlayer2(-1);
+                        all_game_resources.player2LoseStamina(stamina_lost);
+                    }
+                }
             }
             else if (player_one_action == 2)
             {
@@ -335,15 +378,32 @@ int main()
                 cin >> candy_player_used;
                 candy_player_used -= 1;
                 Candy candy_used = all_game_resources.findCandyFromPlayer1ByIndex(candy_player_used);
-                cout << candy_used.name << "used" << endl;
                 if(candy_used.name == "")
                 {
                     cout << "Candy unavaliable" << endl;
                 }
                 else if(candy_used.candy_type == "magical")
                 {
-                    all_game_resources.applyMagicalCandy(1, candy_used);
+                    all_game_resources.applyMagicalCandy(1, candy_player_used, candy_used);
                 }
+                else if(candy_used.candy_type == "poison")
+                {
+                    all_game_resources.applyPoisonAndImmunityCandy(1, candy_player_used, candy_used);
+                }
+                // else if(candy_used.candy_type == "gummy")
+                // {
+                //     cout << "You used a gummy tile and " << game_board.getPlayerOnePosition() << " is now a gummy tile and will immobilize players for";
+                //     if(candy_used.name == "Fearsome Fudge") 
+                //     {
+                //         cout <<" 1 turn" << endl;
+                //         game_board.makeTileAGummyTile(game_board.getPlayerOnePosition(), 1);
+                //     }
+                //     if(candy_used.name == "Ruby Rapture")
+                //     {
+                //         cout <<" 2 turns" << endl;
+                //         game_board.makeTileAGummyTile(game_board.getPlayerOnePosition(), 2);
+                //     }
+                // }
                 
             }
             else if(player_one_action == 3)
@@ -370,8 +430,27 @@ int main()
             cout << "Enter 2 to use a candy" << endl;
             cout << "Enter 3 to display stats" << endl;
             cin >> player_2_action;
+            //check if player can actually move
+            if(all_game_resources.getTurnsPlayer2CannotMove() < 0)
+            {
+                //if player is currently immobilized get turns cannot move minues 1 and exit the loop
+                all_game_resources.player2Get1TurnBack();
+                cout << "You are currently immobilized and you are still immobilized for the next " << -1 * all_game_resources.getTurnsPlayer1CannotMove() << " turns" << endl; 
+                break;
+            }
             if(player_2_action == 1)
             {
+                if(all_game_resources.getPlayer2Stamina() == 0)
+                {
+                    //if player is 0 stamina, they cannot move for this turn and next 2 turns but gain 20 stamina back once they can move and exits loop
+                    cout <<"You have 0 stamina, you cannot move this turn and the next 2 turns" << endl;
+                    all_game_resources.player2GainStamina(20);
+                    all_game_resources.immobilizePlayer2(-2);
+                    break;
+                }
+                //use 1 stamina to move
+                all_game_resources.player2LoseStamina(1);
+
                 int player2_current_position = game_board.getPlayerTwoPosition();
                 string player2_current_tile_color = game_board.getTileColor(player2_current_position);
                 player_2_moves = drawCardsAndMove(player2_current_tile_color);
@@ -464,6 +543,11 @@ int main()
                             }
                         }
                     }
+                    // if(tile_type == "gummyTile")
+                    // {
+                    //     cout <<"Player 2 you stepped on a gummy tile and you are immobolized for " << game_board.getGummyValue(game_board.getPlayerTwoPosition()) << endl;
+                    //     all_game_resources.immobilizePlayer2(-1 * game_board.getGummyValue(game_board.getPlayerTwoPosition()));
+                    // }
                 }
 
                 //check for candystore
@@ -499,6 +583,53 @@ int main()
                 cout << "Here is the board after your move" << endl;
                 game_board.displayBoard();
                 cout << endl;
+
+                //40% chance calamity happends
+                string calamity = generateCalamities();
+                cout << calamity << endl;
+                if(calamity == "candyBandits")
+                {
+                    int lost = generateRandom (1, 10);
+                    cout << "You encountered candy bandits you lost " << lost << " gold";
+                    all_game_resources.player2LoseGold(lost);
+                }
+                if(calamity == "lollipopLabyrinth")
+                {
+                    cout << "You got lost in the lollipop labrinth" << endl;
+                    cout << "You play rock paper scissors in attempt to recover the damage" << endl;
+                    bool rock_paper_scissors = all_game_resources.play_rock_paper_scissors();
+                    if(rock_paper_scissors)
+                    {
+                        cout <<"You won the rock paper scissors!" <<endl;
+                        cout <<"You do not take any damage" << endl;
+                    }
+                    else
+                    {
+                        cout << "You lose rock paper scissors" << endl;
+                        cout <<"You lose 1 turn" << endl;
+                        all_game_resources.immobilizePlayer1(-1);
+                    }
+                }
+                if(calamity == "candyAvalanche")
+                {
+                    cout << "You got struct by a candy avalanche" << endl;
+                    cout << "You play rock paper scissors in attempt to recover the damage" << endl;
+                    int stamina_lost = generateRandom(5,10);
+                    bool rock_paper_scissors = all_game_resources.play_rock_paper_scissors();
+                    if(rock_paper_scissors)
+                    {
+                        cout <<"You won the rock paper scissors!" << endl;
+                        cout <<"You do not take any damage" <<endl;
+                    }
+                    else
+                    {
+                        cout <<"You lose rock paper scissors" <<endl;
+                        cout <<"You lose 1 turn" <<endl;
+                        cout <<"You also lose " << stamina_lost <<" stamina" <<endl;
+                        all_game_resources.immobilizePlayer2(-1);
+                        all_game_resources.player2LoseStamina(stamina_lost);
+                    }
+                }
             }
             else if(player_2_action == 2)
             {
@@ -506,7 +637,7 @@ int main()
                 all_game_resources.print_player2_stats();
                 int candy_player_used;
                 cout << endl;
-                cout << "What candy do you want to use enter a number 1-9 corresponding to the index of the candy in your inventory" <<endl;
+                cout << "What candy do you want to use enter a number 1-9 corresponding to the index of the candy in your inventory, enter 9 to not use any candy" <<endl;
                 cin >> candy_player_used;
                 candy_player_used -= 1;
                 Candy candy_used = all_game_resources.findCandyFromPlayer2ByIndex(candy_player_used);
@@ -516,8 +647,26 @@ int main()
                 }
                 else if(candy_used.candy_type == "magical")
                 {
-                    all_game_resources.applyMagicalCandy(2, candy_used);
+                    all_game_resources.applyMagicalCandy(2, candy_player_used, candy_used);
                 }
+                else if(candy_used.candy_type == "poison")
+                {
+                    all_game_resources.applyPoisonAndImmunityCandy(2, candy_player_used, candy_used);
+                }
+                // else if(candy_used.candy_type == "gummy")
+                // {
+                //     cout << "You used a gummy tile and " << game_board.getPlayerTwoPosition() << " is now a gummy tile and will immobilize players for";
+                //     if(candy_used.name == "Fearsome Fudge") 
+                //     {
+                //         cout <<" 1 turn" << endl;
+                //         game_board.makeTileAGummyTile(game_board.getPlayerTwoPosition(), 1);
+                //     }
+                //     if(candy_used.name == "Ruby Rapture")
+                //     {
+                //         cout <<" 2 turns" << endl;
+                //         game_board.makeTileAGummyTile(game_board.getPlayerTwoPosition(), 2);
+                //     }
+                // }
             }
             else if(player_2_action == 3)
             {

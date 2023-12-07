@@ -381,7 +381,7 @@ void GameResources :: moneyRobbery(int player_who_arrives_first)
 }
 
 //apply magical candy candy to regain stamina
-void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_applied)
+void GameResources :: applyMagicalCandy(int player_who_used_candy, int candy_used_position, Candy candy_applied)
 {
     if(player_who_used_candy == 1)
     {
@@ -389,21 +389,31 @@ void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_a
         {
             cout << "Player 1 you used Frosty Fizz you gain 10 stamina" << endl;
             player1GainStamina(10);
+            _player_1.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Crimson Crystal")
         {
             cout << "Player 1 you used Crimson Crystal and you gained 15 stamina" << endl;
             player1GainStamina(15);
+            _player_1.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Mystic Marshmallow")
         {
             cout << "Player 1 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
             player1GainStamina(20);
+            _player_1.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Breezy Butterscotch")
         {
             cout << "Player 1 you used Breezy Butterscotch and you gained 30 stamina" <<endl;
-            player1GainGold(30);
+            player1GainStamina(30);
+            _player_1.removeCandyFromInventory(candy_used_position);
+        }
+        if(candy_applied.name == "Jellybean of Vigor")
+        {
+            cout << "Player 1 you used Jellybean of Vigor and you gained 50 stamina" << endl;
+            player1GainStamina(50);
+            _player_1.removeCandyFromInventory(candy_used_position);
         }
     }
     if(player_who_used_candy == 2)
@@ -412,25 +422,295 @@ void GameResources :: applyMagicalCandy(int player_who_used_candy, Candy candy_a
         {
             cout << "Player 2 you used Frosty Fizz you gain 10 stamina" << endl;
             player2GainStamina(10);
+            _player_2.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Crimson Crystal")
         {
             cout << "Player 2 you used Crimson Crystal and you gained 15 stamina" << endl;
             player2GainStamina(15);
+            _player_2.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Mystic Marshmallow")
         {
             cout << "Player 2 you used Mystic Marshmallow and you gained 20 stamina" <<endl;
-            player2GainStamina(30);
+            player2GainStamina(20);
+            _player_2.removeCandyFromInventory(candy_used_position);
         }
         if(candy_applied.name == "Breezy Butterscotch")
         {
             cout << "Player 2 you used Breezy Butterscotch and you gained 30 stamina" <<endl;
             player2GainStamina(30);
+            _player_2.removeCandyFromInventory(candy_used_position);
+        }
+        if(candy_applied.name == "Jellybean of Vigor")
+        {
+            cout << "Player 2 you used Jellybean of Vigor and you gained 50 stamina" << endl;
+            player2GainStamina(50);
+            _player_2.removeCandyFromInventory(candy_used_position);
         }
         
     }
 }
+
+void GameResources :: applyPoisonAndImmunityCandy(int player_number, int candy_used_position, Candy candy)
+{
+    if(player_number == 1)
+    {
+        vector <Candy> player2_candies = _player_2.getAllCandy();
+        if(candy.name == "Lucky Licorice")
+        {
+            cout << "Player 1 uses lucky licorice on player 2" << endl;
+            bool has_bubblegum_blast = false;
+            int bubble_gum_blast_position = -1;
+            bool has_sparkling_sapphire = false;
+            int sparking_sapphire_position = -1;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player2_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player2_candy = player2_candies.at(i);
+                if(player2_candy.name == "Bubblegum Blast")
+                {
+                    has_bubblegum_blast = true;
+                    bubble_gum_blast_position = i;
+                }
+                else if(player2_candy.name == "Sparkling Sapphire")
+                {
+                    has_sparkling_sapphire = true;
+                    sparking_sapphire_position = i;
+                }
+                else if(player2_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_bubblegum_blast)
+            {
+                cout << "But player 2 has bubblegum_blast, an mild immunity candy, both candies used and no effect happend" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(bubble_gum_blast_position);
+            }
+            else if(has_sparkling_sapphire)
+            {
+                cout << "But player 2 has sparking sapphire, an moderate immunity candy, both candies used and no effect happends" <<endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(sparking_sapphire_position);
+            }
+            else if(has_caramel_comet)
+            {
+                cout << "But player 2 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 2 loses 10 stamina" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                player2LoseStamina(10);
+            }
+        }
+        else if(candy.name == "Venomous Vortex")
+        {
+            cout << "Player 1 uses Venemous Vortex on player 2" << endl;
+            bool has_sparkling_sapphire = false;
+            int sparking_sapphire_position = -1;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player2_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player2_candy = player2_candies.at(i);
+                if(player2_candy.name == "Sparkling Sapphire")
+                {
+                    has_sparkling_sapphire = true;
+                    sparking_sapphire_position = i;
+                }
+                else if(player2_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_sparkling_sapphire)
+            {
+                cout << "But player 2 has sparking sapphire, an moderate immunity candy, both candies used and no effect happends" <<endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(sparking_sapphire_position);
+            }
+            else if(has_caramel_comet)
+            {
+                cout << "But player 2 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 2 loses 15 stamina" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                player2LoseStamina(15);
+            }
+        }
+        else if(candy.name == "Toxic Taffy")
+        {
+            cout << "Player 1 uses Toxic Taffy against player 2" << endl;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player2_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player2_candy = player2_candies.at(i);
+                if(player2_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_caramel_comet)
+            {
+                cout << "But player 2 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                _player_2.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 2 loses 20 stamina" << endl;
+                _player_1.removeCandyFromInventory(candy_used_position);
+                player2LoseStamina(20);
+            }
+        }
+    }
+    else if(player_number == 2)
+    {
+        vector <Candy> player1_candies = _player_1.getAllCandy();
+        if(candy.name == "Lucky Licorice")
+        {
+            cout << "Player 2 uses lucky licorice on player 1" << endl;
+            bool has_bubblegum_blast = false;
+            int bubble_gum_blast_position = -1;
+            bool has_sparkling_sapphire = false;
+            int sparking_sapphire_position = -1;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player1_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player1_candy = player1_candies.at(i);
+                if(player1_candy.name == "Bubblegum Blast")
+                {
+                    has_bubblegum_blast = true;
+                    bubble_gum_blast_position = i;
+                }
+                else if(player1_candy.name == "Sparkling Sapphire")
+                {
+                    has_sparkling_sapphire = true;
+                    sparking_sapphire_position = i;
+                }
+                else if(player1_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_bubblegum_blast)
+            {
+                cout << "But player 1 has bubblegum_blast, an mild immunity candy, both candies used and no effect happend" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(bubble_gum_blast_position);
+            }
+            else if(has_sparkling_sapphire)
+            {
+                cout << "But player 1 has sparking sapphire, an moderate immunity candy, both candies used and no effect happends" <<endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(sparking_sapphire_position);
+            }
+            else if(has_caramel_comet)
+            {
+                cout << "But player 1 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 1 loses 10 stamina" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                player1LoseStamina(10);
+            }
+        }
+        else if(candy.name == "Venomous Vortex")
+        {
+            cout << "Player 2 uses Venemous Vortex on player 1" << endl;
+            bool has_sparkling_sapphire = false;
+            int sparking_sapphire_position = -1;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player1_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player1_candy = player1_candies.at(i);
+                if(player1_candy.name == "Sparkling Sapphire")
+                {
+                    has_sparkling_sapphire = true;
+                    sparking_sapphire_position = i;
+                }
+                else if(player1_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_sparkling_sapphire)
+            {
+                cout << "But player 1 has sparking sapphire, an moderate immunity candy, both candies used and no effect happends" <<endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(sparking_sapphire_position);
+            }
+            else if(has_caramel_comet)
+            {
+                cout << "But player 1 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 1 loses 15 stamina" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                player1LoseStamina(15);
+            }
+        }
+        else if(candy.name == "Toxic Taffy")
+        {
+            cout << "Player 2 uses Toxic Taffy against player 1" << endl;
+            bool has_caramel_comet = false;
+            int caramel_comet_position = -1;
+            int size = player1_candies.size();
+            for(int i = 0; i < size; i++)
+            {
+                Candy player1_candy = player1_candies.at(i);
+                if(player1_candy.name == "Caramel Comet")
+                {
+                    has_caramel_comet = true;
+                    caramel_comet_position = i;
+                }
+            }
+            if(has_caramel_comet)
+            {
+                cout << "But player 1 has caramel comet, a immunity candy for everything, both candies used and no effect happends" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                _player_1.removeCandyFromInventory(caramel_comet_position);
+            }
+            else
+            {
+                cout << "Player 1 loses 20 stamina" << endl;
+                _player_2.removeCandyFromInventory(candy_used_position);
+                player1LoseStamina(20);
+            }
+        }
+    }
+}
+
+
 
 //play riddle
 //return true if player solved riddle
@@ -452,6 +732,19 @@ bool GameResources :: play_riddle()
     else
     {
         cout << "You failed the riddle" <<endl;
+        return false;
+    }
+}
+
+bool :: GameResources :: play_rock_paper_scissors()
+{
+    int win_or_lose = generateRandomBetweenMaxAndMin(0,99);
+    if(win_or_lose <= 49)
+    {
+        return true;
+    }
+    else
+    {
         return false;
     }
 }
@@ -549,6 +842,31 @@ void GameResources :: player2GainStamina(int stamina_gained)
         _player_2.setPlayerStamina(100);
     }
 }
+void GameResources :: player1LoseStamina(int stamina_losed)
+{
+    int stamina_player1_have = _player_1.getPlayerStamina() - stamina_losed;
+    if(stamina_player1_have < 0)
+    {
+        _player_1.setPlayerStamina(0);
+    }
+    else
+    {
+        _player_1.setPlayerStamina(stamina_player1_have);
+    }
+}
+void GameResources :: player2LoseStamina(int stamina_losed)
+{
+    int stamina_player2_have = _player_2.getPlayerStamina() - stamina_losed;
+    if(stamina_player2_have < 0)
+    {
+        _player_2.setPlayerStamina(0);
+    }
+    else
+    {
+        _player_2.setPlayerStamina(stamina_player2_have);
+    }
+}
+
 void GameResources :: player1SetRobbersRepel(bool status)
 {
     _player_1.setRobbersRepel(status);
@@ -592,4 +910,39 @@ Candy GameResources :: findCandyFromPlayer2(string candy_name)
 {
     return _player_2.findCandy(candy_name);
 }
-
+void GameResources :: immobilizePlayer1(int turns_immobilized)
+{
+    _player_1.setTurnsPlayerCannotMoveFor(turns_immobilized);
+}
+void GameResources :: immobilizePlayer2(int turns_immobilized)
+{
+    _player_2.setTurnsPlayerCannotMoveFor(turns_immobilized);
+}
+void GameResources :: player1Get1TurnBack()
+{
+    int turns = _player_1.getTurnsPlayerCannotMoveFor();
+    turns += 1;
+    _player_1.setTurnsPlayerCannotMoveFor(turns);
+}
+void GameResources :: player2Get1TurnBack()
+{
+    int turns = _player_2.getTurnsPlayerCannotMoveFor();
+    turns += 1;
+    _player_2.setTurnsPlayerCannotMoveFor(turns);
+}
+int GameResources :: getPlayer1Stamina()
+{
+    return _player_1.getPlayerStamina();
+}
+int GameResources :: getPlayer2Stamina()
+{
+    return _player_2.getPlayerStamina();
+}
+int GameResources :: getTurnsPlayer1CannotMove()
+{
+    return _player_1.getTurnsPlayerCannotMoveFor();
+}
+int GameResources :: getTurnsPlayer2CannotMove()
+{
+    return _player_2.getTurnsPlayerCannotMoveFor();
+}

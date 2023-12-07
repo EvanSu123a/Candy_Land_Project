@@ -102,8 +102,8 @@ class GameResources
         if a non gummy candy is used return -1;
         
         */
-       void applyMagicalCandy(int, Candy);
-       void applyPoisonAndImmunityCandy(Candy);
+       void applyMagicalCandy(int,int, Candy);
+       void applyPoisonAndImmunityCandy(int,int, Candy);
 
        /*
 apply special candy function
@@ -121,7 +121,6 @@ else if the candy is treasure hunter's truffle
     else
         the user lose the hidden treasure
 */
-        void applySpecialCandy(Candy);
 
 /*
 play rock paper scissors function returns a bool
@@ -158,6 +157,8 @@ if winner is not decided
         
         void player1GainStamina(int);
         void player2GainStamina(int);
+        void player1LoseStamina(int);
+        void player2LoseStamina(int);
 
         void player1SetRobbersRepel(bool);
         void player2SetRobbersRepel(bool);
@@ -167,10 +168,21 @@ if winner is not decided
         void player1GetJellyBeanOfVigor();
         void player2GetJellyBeanOfVigor();
 
+
         Candy findCandyFromPlayer1ByIndex(int);
         Candy findCandyFromPlayer2ByIndex(int);
         Candy findCandyFromPlayer1(string);
         Candy findCandyFromPlayer2(string);
+
+        void immobilizePlayer1(int);
+        void immobilizePlayer2(int);
+        void player1Get1TurnBack();
+        void player2Get1TurnBack();
+
+        int getPlayer1Stamina();
+        int getPlayer2Stamina();
+        int getTurnsPlayer1CannotMove();
+        int getTurnsPlayer2CannotMove();
 };
 
 #endif
