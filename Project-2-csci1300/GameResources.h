@@ -106,6 +106,11 @@ class GameResources
         int getTurnsPlayer1CannotMove();
         int getTurnsPlayer2CannotMove();
 
+        string getPlayer1Name();
+        string getPlayer2Name();
+        string getPlayer1CharacterName();
+        string getPlayer2CharacterName();
+
         // void excecuteTaffyTrap(int);
 };
 

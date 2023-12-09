@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <fstream>
 #include "GameResources.h"
 #include "Board.h"
 
@@ -54,6 +55,7 @@ int main()
     //variables to determine if game is over
     bool player_one_win = false;
     bool player_two_win = false;
+    int winner = 0;
 
     //starting game initialize all game resources
     GameResources all_game_resources = GameResources();
@@ -176,7 +178,7 @@ int main()
             {
                 cout << "You have successfully bought " <<candy_player_2_bought.name << endl;
                 all_game_resources.player2AddCandy(candy_player_2_bought);
-                all_game_resources.player1LoseGold(cost);
+                all_game_resources.player2LoseGold(cost);
                 cout << endl;
                 all_game_resources.print_player2_stats();
             }
@@ -408,8 +410,8 @@ int main()
                         cout <<"You lose rock paper scissors" <<endl;
                         cout <<"You lose 1 turn" <<endl;
                         cout <<"You also lose " << stamina_lost <<" stamina" <<endl;
-                        all_game_resources.immobilizePlayer2(-1);
-                        all_game_resources.player2LoseStamina(stamina_lost);
+                        all_game_resources.immobilizePlayer1(-1);
+                        all_game_resources.player1LoseStamina(stamina_lost);
                     }
                 }
                 if(calamity == "taffyTrap")
@@ -472,6 +474,7 @@ int main()
         if(game_board.getPlayerOnePosition() >= 82)
         {
             cout << "Player 1 wins" << endl;
+            winner = 1;
             break;
         }
         
@@ -647,7 +650,6 @@ int main()
 
                 //40% chance calamity happends
                 string calamity = generateCalamities();
-                cout << calamity << endl;
                 if(calamity == "candyBandits")
                 {
                     int lost = generateRandom (1, 10);
@@ -749,6 +751,7 @@ int main()
         if (game_board.getPlayerTwoPosition() >= 82)
         {
             cout << "Player 2 wins" << endl;
+            winner = 2;
             break;
         }
     }
@@ -756,6 +759,27 @@ int main()
     cout << game_board.getPlayerOnePosition()<<endl;
     cout << game_board.getPlayerTwoPosition()<<endl;
 
+    ofstream file_out;
+    file_out.open("result.txt");
+    if(winner == 1)
+    {
+        cout << "Player 1 stats have been printed to result.txt" << endl;
+        file_out << "Player 1 name: " << all_game_resources.getPlayer1Name() << endl;
+        file_out << "Player 1 Character name: " << all_game_resources.getPlayer1CharacterName() << endl;
+        file_out << "Player 1 stamina left: " << all_game_resources.getPlayer1Stamina() << endl;
+        file_out << "Player 1 gold left: " << all_game_resources.getPlayer1Gold() << endl;
+    }
+    if(winner == 2)
+    {
+        cout << "Player 2 stats have been printed to result.txt" << endl;
+        file_out << "Player 2 name: " << all_game_resources.getPlayer2Name() << endl;
+        file_out << "Player 2 Character name: " << all_game_resources.getPlayer2CharacterName() << endl;
+        file_out << "Player 2 stamina left: " << all_game_resources.getPlayer2Stamina() << endl;
+        file_out << "Player 2 gold left: " << all_game_resources.getPlayer2Gold() << endl;
+
+    }
+
+    
 
     
     return 0;

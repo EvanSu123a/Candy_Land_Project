@@ -945,6 +945,23 @@ int GameResources :: getTurnsPlayer2CannotMove()
     return _player_2.getTurnsPlayerCannotMoveFor();
 }
 
+string GameResources :: getPlayer1Name()
+{
+    return _player_1.getPlayerName();
+}
+string GameResources :: getPlayer2Name()
+{
+    return _player_2.getPlayerName();
+}
+string GameResources :: getPlayer1CharacterName()
+{
+    return _player_1.getPlayerCharacterName();
+}
+string GameResources :: getPlayer2CharacterName()
+{
+    return _player_2.getPlayerCharacterName();
+}
+
 // void GameResources :: excecuteTaffyTrap(int player_number)
 // {
 //     if(player_number == 1)
